@@ -4,7 +4,7 @@ Welcome to this repository. It contains a simple, header only c++ delegate imple
 ## how to use
 The examples folder contains a fully documented example.
 
-## how to include in own projects
+## how to include in your own projects
 Download/clone the git project. Add 'include' folder to your compiler's include path. Add ``#include "delegate.hpp"`` to your sources. Done.
 
 ## how to include in meson projects
@@ -19,7 +19,7 @@ Afterwards, the example and the test executable should be in the build folder, i
 
 ## how to build without meson
 The example should be buildable without much hassle. Just add the 'include' folder to the include path and compile 'example/delegate_example.cpp'. 
-The test is not simple to build if you don't already have a copy of catch2 and know how to build/link it. Also all that's needed if you have catch2 already, is to add the 'include' folder to the include path, along with the catch2 include path.
+The test is not simple to build if you don't already have a copy of catch2 and know how to build/link it. Also all that's needed if you have catch2 already, is to add the 'include' folder to the include path, along with the catch2 include path, and compile 'tests/delegate.t.cpp'.
 
 ## License
 This project is distributed under the Boost Software License version 1.0. See LICENSE_1_0.txt for more details.
