@@ -18,7 +18,7 @@ Clone the project. ``cd`` to the directory containing the meson.build file in yo
 Afterwards, the example and the test executable should be in the build folder, if the setup and compile steps were successful. There should not be any build errors with the test, as I have included a copy of catch2 in the repository.
 
 ## how to build without meson
-The example should be buildable without much hassle. Just add the 'include' folder to the include path. 
+The example should be buildable without much hassle. Just add the 'include' folder to the include path and compile 'example/delegate_example.cpp'. 
 The test is not simple to build if you don't already have a copy of catch2 and know how to build/link it. Also all that's needed if you have catch2 already, is to add the 'include' folder to the include path, along with the catch2 include path.
 
 ## License
