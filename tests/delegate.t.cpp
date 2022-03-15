@@ -128,7 +128,6 @@ struct BigMove {
   bool moved_from = {false};
   char buf[100]{0};
 };
-#define CATCH_CONFIG_MAIN
 #include "catch2/catch.hpp"
 
 SCENARIO("Resetting a empty delegate has no effect") {

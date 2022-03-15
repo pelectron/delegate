@@ -5,5 +5,5 @@ catch_dep = dependency('catch2', fallback:['catch2','catch2_dep'], required:fals
 example = executable('delegate_example', files('examples/delegate_example.cpp'), include_directories:'include')
 multi_example = executable('multicast_delegate_example',files('examples/multicast_delegate.cpp'),  include_directories:'include')
 if catch_dep.found()
-  delegate_test = executable('delegate_test', files('tests/delegate.t.cpp'), include_directories:'include', dependencies:[catch_dep])
+  test_main = executable('test_main', files('tests/delegate.t.cpp','tests/multicast_delegate.t.cpp','tests/test_main.cpp'), include_directories:'include', dependencies:[catch_dep])
 endif
