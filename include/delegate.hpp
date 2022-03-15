@@ -17,11 +17,11 @@
 #include <type_traits>
 
 namespace delegate_impl {
-struct vtable; // forward declaration
-/// the maximum size a callable can be before it gets allocated on the heap.
-/// 16 was chosen because this is the byte size of two pointers in a 64 bit
-/// system, i.e. just what is needed to invoke a member function on an object
-static constexpr size_t max_storage_size = 16u;
+  struct vtable; // forward declaration
+  /// the maximum size a callable can be before it gets allocated on the heap.
+  /// 16 was chosen because this is the byte size of two pointers in a 64 bit
+  /// system, i.e. just what is needed to invoke a member function on an object
+  static constexpr size_t max_storage_size = 16u;
 } // namespace delegate_impl
 
 template <typename Signature>
@@ -64,7 +64,8 @@ class delegate; // froward declaration, intentionally left unimplemented
  * @tparam Ret return type of callable
  * @tparam Args argument types of callable
  */
-template <typename Ret, typename... Args> class delegate<Ret(Args...)> {
+template <typename Ret, typename... Args>
+class delegate<Ret(Args...)> {
 public:
   /// default constructor
   delegate();
@@ -73,10 +74,12 @@ public:
   delegate(Ret (*free_function)(Args...));
 
   /// construct from object and member function
-  template <typename T> delegate(T &obj, Ret (T::*member_func)(Args...));
+  template <typename T>
+  delegate(T &obj, Ret (T::*member_func)(Args...));
 
   /// construct from object and const member function
-  template <typename T> delegate(T &obj, Ret (T::*member_func)(Args...) const);
+  template <typename T>
+  delegate(T &obj, Ret (T::*member_func)(Args...) const);
 
   /// construct from function object
   template <typename Lambda,
@@ -129,14 +132,17 @@ private:
   /// knows how to invoke a free function
   static Ret free_func_invoke(void *obj, Args... args);
   /// knows how to invoke mfn_holder_t
-  template <typename T> static Ret mfn_invoke(void *obj, Args... args);
+  template <typename T>
+  static Ret mfn_invoke(void *obj, Args... args);
   /// knows how to invoke const_mfn_holder_t
-  template <typename T> static Ret const_mfn_invoke(void *obj, Args... args);
+  template <typename T>
+  static Ret const_mfn_invoke(void *obj, Args... args);
   /// knows to to invoke a inline stored functor
   template <typename Lambda>
   static Ret inline_invoke(void *lambda, Args... args);
   /// knows how to invoke a heap stored functor
-  template <typename F> static Ret heap_invoke(void *f, Args... args);
+  template <typename F>
+  static Ret heap_invoke(void *f, Args... args);
   /// invokes nothing
   static Ret null_invoke(void *, Args...);
 
@@ -148,91 +154,103 @@ private:
   /// invokes the actual function/functor stored in the delegate
   InvokeFuncPtr_t invoke;
   /// vtable containing move/copy/destroy functions
-  delegate_impl::vtable *table;
+  const delegate_impl::vtable *table;
 };
 
 namespace delegate_impl {
-/**
- * @brief holds a pointer to T and a member function pointer with signature
- * Ret(Args...)
- *
- * @tparam T object type
- */
-template <typename T, typename Ret, typename... Args> struct mfn_holder_t {
-  mfn_holder_t(T &obj, Ret (T::*member_func)(Args...))
-      : t(&obj), func(member_func) {}
-  mfn_holder_t(const mfn_holder_t &) = default;
-  mfn_holder_t(mfn_holder_t &&) = default;
+  /**
+   * @brief holds a pointer to T and a member function pointer with signature
+   * Ret(Args...)
+   *
+   * @tparam T object type
+   */
+  template <typename T, typename Ret, typename... Args>
+  struct mfn_holder_t {
+    mfn_holder_t(T &obj, Ret (T::*member_func)(Args...))
+        : t(&obj), func(member_func) {}
+    mfn_holder_t(const mfn_holder_t &) = default;
+    mfn_holder_t(mfn_holder_t &&) = default;
 
-  T *t;
-  Ret (T::*func)(Args...);
-};
+    T *t;
+    Ret (T::*func)(Args...);
+  };
 
-/**
- * @brief holds a pointer to T and a const member function pointer with
- * signature Ret(Args...) const
- *
- * @tparam T object type
- */
-template <typename T, typename Ret, typename... Args>
-struct const_mfn_holder_t {
-  const_mfn_holder_t(T &obj, Ret (T::*member_func)(Args...) const)
-      : t(&obj), func(member_func) {}
+  /**
+   * @brief holds a pointer to T and a const member function pointer with
+   * signature Ret(Args...) const
+   *
+   * @tparam T object type
+   */
+  template <typename T, typename Ret, typename... Args>
+  struct const_mfn_holder_t {
+    const_mfn_holder_t(T &obj, Ret (T::*member_func)(Args...) const)
+        : t(&obj), func(member_func) {}
 
-  const_mfn_holder_t(const const_mfn_holder_t &) = default;
-  const_mfn_holder_t(const_mfn_holder_t &&) = default;
+    const_mfn_holder_t(const const_mfn_holder_t &) = default;
+    const_mfn_holder_t(const_mfn_holder_t &&) = default;
 
-  T *t;
-  Ret (T::*func)(Args...) const;
-};
-/**
- * @brief vtable type holding a free copy, move and destroy function.
- * The void* parameters will always be the address of a delegates storage
- * member. Usage should become clear in the copy/move constructors/assignment
- * operators of the delegate class. The static member functions implement the
- * functions needed by the delegate class.
- */
-struct vtable {
-  // members
-  void (*copy)(void *dest, const void *src); // copy function
-  void (*move)(void *dest, void *src);       // move function
-  void (*destroy)(void *dest);               // destroy function
+    T *t;
+    Ret (T::*func)(Args...) const;
+  };
+  /**
+   * @brief vtable type holding a free copy, move and destroy function.
+   * The void* parameters will always be the address of a delegates storage
+   * member. Usage should become clear in the copy/move constructors/assignment
+   * operators of the delegate class. The static member functions implement the
+   * functions needed by the delegate class.
+   */
+  struct vtable {
+    // members
+    void (*copy)(void *dest, const void *src); // copy function
+    void (*move)(void *dest, void *src);       // move function
+    void (*destroy)(void *dest);               // destroy function
 
-  // static functions which implement the members
+    // static functions which implement the members
 
-  // inline copy/move/destroy
-  template <typename T> static void inline_copy(void *dest, const void *source);
-  template <typename T> static void inline_move(void *dest, void *source);
-  template <typename T> static void inline_destroy(void *dest);
+    // inline copy/move/destroy
+    template <typename T>
+    static void inline_copy(void *dest, const void *source);
+    template <typename T>
+    static void inline_move(void *dest, void *source);
+    template <typename T>
+    static void inline_destroy(void *dest);
 
-  // simple copy/move/detroy
-  static void simple_copy(void *dest, const void *source);
-  static void simple_move(void *dest, void *source);
-  static void simple_destroy(void *dest);
+    // simple copy/move/detroy
+    static void trivial_copy(void *dest, const void *source);
+    static void trivial_move(void *dest, void *source);
+    static void trivial_destroy(void *dest);
 
-  // heap copy/move/destroy
-  template <typename T> static void heap_copy(void *dest, const void *source);
-  template <typename T> static void heap_move(void *dest, void *source);
-  template <typename T> static void heap_destroy(void *dest);
+    // heap copy/move/destroy
+    template <typename T>
+    static void heap_copy(void *dest, const void *source);
+    template <typename T>
+    static void heap_move(void *dest, void *source);
+    template <typename T>
+    static void heap_destroy(void *dest);
 
-  // null copy/move/destroy functions
-  static void null_copy(void *, const void *);
-  static void null_move(void *, void *);
-  static void null_destroy(void *);
+    // null copy/move/destroy functions
+    static void null_copy(void *, const void *);
+    static void null_move(void *, void *);
+    static void null_destroy(void *);
 
-  // provides vtable for inline stored function objects of type T
-  template <typename T> static vtable *make_inline();
+    // provides vtable for inline stored function objects of type T
+    template <typename T>
+    static const vtable *make_inline();
 
-  // provides vtable for heap allocated function objects of type T
-  template <typename T> static vtable *make_heap();
+    // provides vtable for heap allocated function objects of type T
+    template <typename T>
+    static const vtable *make_heap();
 
-  // provides vtable for inline stored memcopyable structures, i.e.
-  // mfn_holder_t/const_mfn_holder_t/free function pointer
-  static vtable *make_simple();
+    // provides vtable for inline stored memcopyable structures, i.e.
+    // mfn_holder_t/const_mfn_holder_t/free function pointer
+    static const vtable *make_trivial();
 
-  // provides vtable which does nothing
-  static vtable *make_null();
-};
+    // provides vtable which does nothing
+    static const vtable *make_null();
+
+    // provides vtable for trivially constructible, destructible and moveable
+    // type
+  };
 } // namespace delegate_impl
 
 template <typename Ret, typename... Args>
@@ -288,7 +306,7 @@ delegate<Ret(Args...)>::delegate(delegate<Ret(Args...)> &&other) {
 
 template <typename Ret, typename... Args>
 delegate<Ret(Args...)> &
-delegate<Ret(Args...)>::operator=(const delegate<Ret(Args...)> &other) {
+    delegate<Ret(Args...)>::operator=(const delegate<Ret(Args...)> &other) {
   table->destroy(&storage); // destroy our stored callable first
   other.table->copy(&storage, &other.storage); // then copy from other
   invoke = other.invoke;
@@ -298,7 +316,7 @@ delegate<Ret(Args...)>::operator=(const delegate<Ret(Args...)> &other) {
 
 template <typename Ret, typename... Args>
 delegate<Ret(Args...)> &
-delegate<Ret(Args...)>::operator=(delegate<Ret(Args...)> &&other) {
+    delegate<Ret(Args...)>::operator=(delegate<Ret(Args...)> &&other) {
   table->destroy(&storage);
   other.table->move(&storage, &other.storage);
   invoke = other.invoke;
@@ -307,7 +325,8 @@ delegate<Ret(Args...)>::operator=(delegate<Ret(Args...)> &&other) {
   return *this;
 }
 
-template <typename Ret, typename... Args> delegate<Ret(Args...)>::~delegate() {
+template <typename Ret, typename... Args>
+delegate<Ret(Args...)>::~delegate() {
   reset();
 }
 
@@ -324,7 +343,7 @@ void delegate<Ret(Args...)>::bind(Ret (*free_function)(Args...)) noexcept {
   using type = Ret (*)(Args...);
   reset();
   invoke = &free_func_invoke;
-  table = delegate_impl::vtable::make_simple();
+  table = delegate_impl::vtable::make_trivial();
   new (&storage) type(free_function);
 }
 
@@ -334,7 +353,7 @@ void delegate<Ret(Args...)>::bind(T &obj,
                                   Ret (T::*member_function)(Args...)) noexcept {
   reset();
   invoke = &mfn_invoke<T>;
-  table = delegate_impl::vtable::make_simple();
+  table = delegate_impl::vtable::make_trivial();
   new (&storage)
       delegate_impl::mfn_holder_t<T, Ret, Args...>{obj, member_function};
   static_assert(
@@ -351,7 +370,7 @@ void delegate<Ret(Args...)>::bind(T &obj, Ret (T::*member_function)(Args...)
                                               const) noexcept {
   reset();
   invoke = &const_mfn_invoke<T>;
-  table = delegate_impl::vtable::make_simple();
+  table = delegate_impl::vtable::make_trivial();
   new (&storage)
       delegate_impl::const_mfn_holder_t<T, Ret, Args...>(obj, member_function);
   static_assert(sizeof(delegate_impl::const_mfn_holder_t<T, Ret, Args...>) <=
@@ -389,7 +408,8 @@ bool delegate<Ret(Args...)>::is_valid() const {
   return invoke != &null_invoke;
 }
 
-template <typename Ret, typename... Args> void delegate<Ret(Args...)>::reset() {
+template <typename Ret, typename... Args>
+void delegate<Ret(Args...)>::reset() {
   table->destroy(&storage); // properly deleting our contained object.
   invoke = &null_invoke;    // setting the delegate up to do nothing.
   table =
@@ -437,7 +457,10 @@ Ret delegate<Ret(Args...)>::null_invoke(void *, Args...) {
   if constexpr ((!std::is_same_v<Ret, void>)&&std::is_constructible_v<
                     std::decay_t<Ret>>) {
     static std::decay_t<Ret> r{};
-    return r;
+    if constexpr (std::is_rvalue_reference_v<Ret>) {
+      return std::move(r);
+    } else
+      return r;
   }
 }
 
@@ -465,25 +488,22 @@ void delegate_impl::vtable::inline_copy(void *dest, const void *source) {
 template <typename T>
 void delegate_impl::vtable::inline_move(void *dest, void *source) {
   new (dest) T(std::move(*static_cast<T *>(source)));
-  std::memset(source, 0, delegate_impl::max_storage_size);
 }
 
-template <typename T> void delegate_impl::vtable::inline_destroy(void *dest) {
-  static_cast<T *>(dest)->~T();
-  std::memset(dest, 0, delegate_impl::max_storage_size);
+template <typename T>
+void delegate_impl::vtable::inline_destroy(void *dest) {
+  std::destroy_at(static_cast<T *>(dest));
 }
 
-inline void delegate_impl::vtable::simple_copy(void *dest, const void *source) {
+inline void delegate_impl::vtable::trivial_copy(void *dest, const void *source) {
   std::memcpy(dest, source, delegate_impl::max_storage_size);
 }
 
-inline void delegate_impl::vtable::simple_move(void *dest, void *source) {
+inline void delegate_impl::vtable::trivial_move(void *dest, void *source) {
   std::memcpy(dest, source, delegate_impl::max_storage_size);
-  std::memset(source, 0, delegate_impl::max_storage_size);
 }
 
-inline void delegate_impl::vtable::simple_destroy(void *dest) {
-  std::memset(dest, 0, delegate_impl::max_storage_size);
+inline void delegate_impl::vtable::trivial_destroy(void *dest) {
 }
 
 template <typename T>
@@ -494,15 +514,12 @@ void delegate_impl::vtable::heap_copy(void *dest, const void *source) {
 
 template <typename T>
 void delegate_impl::vtable::heap_move(void *dest, void *source) {
-  std::memcpy(dest, source, delegate_impl::max_storage_size);
-  std::memset(source, 0, delegate_impl::max_storage_size);
+  std::memcpy(dest, source, sizeof(T*));
 }
 
-template <typename T> void delegate_impl::vtable::heap_destroy(void *dest) {
-  if (*static_cast<T **>(dest) != nullptr) {
+template <typename T>
+void delegate_impl::vtable::heap_destroy(void *dest) {
     delete *static_cast<T **>(dest);
-    std::memset(dest, 0, delegate_impl::max_storage_size);
-  }
 }
 
 inline void delegate_impl::vtable::null_copy(void *, const void *) {}
@@ -510,32 +527,38 @@ inline void delegate_impl::vtable::null_move(void *, void *) {}
 inline void delegate_impl::vtable::null_destroy(void *) {}
 
 template <typename T>
-delegate_impl::vtable *delegate_impl::vtable::make_inline() {
-  static delegate_impl::vtable impl{&vtable::inline_copy<T>,
-                                    &vtable::inline_move<T>,
-                                    &vtable::inline_destroy<T>};
+const delegate_impl::vtable *delegate_impl::vtable::make_inline() {
+  if constexpr (std::is_trivially_constructible_v<T> &&
+                std::is_trivially_destructible_v<T> &&
+                std::is_trivially_move_constructible_v<T>) {
+    delegate_impl::vtable::make_trivial();
+  }
+  static const delegate_impl::vtable impl{&vtable::inline_copy<T>,
+                                          &vtable::inline_move<T>,
+                                          &vtable::inline_destroy<T>};
   return &impl;
 }
 
 template <typename T>
-delegate_impl::vtable *delegate_impl::vtable::make_heap() {
-  static delegate_impl::vtable impl{&delegate_impl::vtable::heap_copy<T>,
-                                    &delegate_impl::vtable::simple_move,
-                                    &delegate_impl::vtable::heap_destroy<T>};
+const delegate_impl::vtable *delegate_impl::vtable::make_heap() {
+  static const delegate_impl::vtable impl{
+      &delegate_impl::vtable::heap_copy<T>, &delegate_impl::vtable::trivial_move,
+      &delegate_impl::vtable::heap_destroy<T>};
   return &impl;
 }
 
-inline delegate_impl::vtable *delegate_impl::vtable::make_simple() {
-  static delegate_impl::vtable impl{&delegate_impl::vtable::simple_copy,
-                                    &delegate_impl::vtable::simple_move,
-                                    &delegate_impl::vtable::simple_destroy};
+inline const delegate_impl::vtable *delegate_impl::vtable::make_trivial() {
+  static const delegate_impl::vtable impl{
+      &delegate_impl::vtable::trivial_copy, &delegate_impl::vtable::trivial_move,
+      &delegate_impl::vtable::null_destroy};
   return &impl;
 }
 
-inline delegate_impl::vtable *delegate_impl::vtable::make_null() {
-  static delegate_impl::vtable impl{&delegate_impl::vtable::null_copy,
-                                    &delegate_impl::vtable::null_move,
-                                    &delegate_impl::vtable::null_destroy};
+inline const delegate_impl::vtable *delegate_impl::vtable::make_null() {
+  static const delegate_impl::vtable impl{&delegate_impl::vtable::null_copy,
+                                          &delegate_impl::vtable::null_move,
+                                          &delegate_impl::vtable::null_destroy};
   return &impl;
 }
+
 #endif
