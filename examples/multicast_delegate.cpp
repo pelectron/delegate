@@ -15,13 +15,13 @@
 
 using delegate_t = multicast_delegate<int &(int)>;
 using delegate2_t = multicast_delegate<void(void)>;
-void free(){}
-struct F{
-  void operator()(){}
-  void member_func(){}
+void free() {}
+struct F {
+  void operator()() {}
+  void member_func() {}
 };
 inline static int val{15};
-int       &free_func(int) { return val; }
+int              &free_func(int) { return val; }
 struct Functor {
   int &operator()(int a) { return free_func(a); }
   int &member_func(int a) { return free_func(a); }
@@ -34,13 +34,27 @@ int main() {
   delegate.bind(Functor{});
   delegate.bind(f, &Functor::member_func);
   delegate(0);
-  for(const auto& res: delegate){
+  assert(delegate.num_results() == 3);
+  for (const auto &res : delegate) {
     assert(res == free_func(0));
   }
-  F f2;
+
+  delegate(0);
+  assert(delegate.num_results() == 6);
+
+  delegate.clear_results();
+  assert(delegate.begin() == delegate.end());
+
+  delegate.reset();
+  assert(delegate.num_callables() == 0);
+
+  F           f2;
   delegate2_t d2;
   d2.bind(&free);
   d2.bind(F{});
-  d2.bind(f2,&F::member_func);
+  d2.bind(f2, &F::member_func);
   d2();
+  d2.clear_results();
+  d2.reset();
+  assert(d2.num_callables() == 0);
 }

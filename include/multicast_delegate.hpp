@@ -33,6 +33,20 @@ struct value_collector<T, false> {
 template <typename T>
 using value_collector_t = value_collector<T, std::is_void_v<T>>;
 
+/**
+ * @brief the multicast_delegate class can bind any amount of callables, execute
+ * them and collect the returned values. The class is essentially a wrapper
+ * around a vector of delegate<Ret(Args...)> and vector of Ret Everytime a
+ * multi_cast_delegate gets called, the retrun values get pushed back into the
+ * results vector. The results vector can be cleared with the clear_results
+ * member function. The delegate vector can be cleared with the unbind member
+ * function.
+ *
+ *
+ *
+ * @tparam Ret
+ * @tparam Args
+ */
 template <typename Ret, typename... Args>
 class multicast_delegate<Ret(Args...)> {
 public:
@@ -56,7 +70,14 @@ public:
     }
   }
 
-  size_t size() const { return delegates.size(); }
+  size_t num_callables() const { return delegates.size(); }
+
+  size_t num_results() const {
+    if constexpr (!void_ret) {
+      return collector.values.size();
+    } else
+      return 0;
+  }
 
   Ret get(size_t n) {
     if constexpr (void_ret)
@@ -66,14 +87,18 @@ public:
     }
   }
 
+  /// clear the results vector
   void clear_results() {
     if constexpr (!void_ret) {
       collector.values.clear();
     }
   }
 
+  /// unbind the callables stored in this.
   void unbind() { delegates.clear(); }
 
+  /// reset the whole multicast_delegate. Equivalent to calling unbind and
+  /// clear_results on the multicast_delegate.
   void reset() {
     unbind();
     clear_results();
@@ -100,7 +125,7 @@ public:
   void bind(F &&f) {
     delegates.push_back(delegate<Ret(Args...)>(std::forward<F>(f)));
   }
-  
+
   iterator begin() {
     if constexpr (void_ret)
       static_assert(!void_ret, "Cannot call this function with Ret = void.");
@@ -150,7 +175,7 @@ public:
   }
 
 private:
-  vector_t               delegates;
+  vector_t                                delegates;
   [[maybe_unused]] value_collector_t<Ret> collector;
 };
 #endif
