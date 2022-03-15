@@ -11,35 +11,28 @@ using delegate_t = multicast_delegate<int(int)>;
 SCENARIO("testing multicast_delegate") {
   GIVEN("a default constructed delegate") {
     delegate_t del;
-    THEN("the delegate has no callables bound to it") {
-      REQUIRE(del.num_callables() == 0);
-    }
-    THEN("The delegate has no results stored") {
-      REQUIRE(del.begin() == del.end());
-      REQUIRE(del.num_results() == 0);
-    }
-    WHEN("callables are bound") {
+    REQUIRE(del.num_callables() == 0);
+    REQUIRE(del.delegate_begin() == del.delegate_end());
+    REQUIRE(del.begin() == del.end());
+    REQUIRE(del.num_results() == 0);
+    WHEN("callables are bound to the delegate") {
       Functor f;
       del.bind(&free_func);
       del.bind(Functor{});
       del.bind(f, &Functor::member_func);
-      THEN("num_callables() returns the correct number of callables bound") {
-        REQUIRE(del.num_callables() == 3);
+      REQUIRE(del.num_callables() == 3);
+      REQUIRE(del.num_results() == 0);
+
+      del(5);
+      REQUIRE(del.num_results() == 3);
+      for (const auto &res : del) {
+        REQUIRE(res == free_func(5));
       }
-      AND_THEN("num_results() is still 0") { REQUIRE(del.num_results() == 0); }
-      AND_THEN("invoking the delegate adds to return values to its result vector"){
-        del(5);
-        REQUIRE(del.num_results() == 3);
-        for(const auto& res: del){
-          REQUIRE(res == free_func(5));
-        }
-        THEN("invoking the delegate a second time doubles the number of stored results"){
-          del(5);
-          REQUIRE(del.num_results() == 6);
-        }
-        for(const auto& res: del){
-          REQUIRE(res == free_func(5));
-        }
+
+      del(5);
+      REQUIRE(del.num_results() == 6);
+      for (const auto &res : del) {
+        REQUIRE(res == free_func(5));
       }
     }
   }
