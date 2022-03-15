@@ -58,8 +58,6 @@ class delegate; // froward declaration, intentionally left unimplemented
  * destroy a callable correctly. See the delegate_impl namespace for more
  * details.
  *
- * A empty delegate will have invoke set to &null_invoke, table set to
- * delegate_impl::vtable::make_null() and storage cleared to 0.
  *
  * @tparam Ret return type of callable
  * @tparam Args argument types of callable
@@ -215,10 +213,9 @@ namespace delegate_impl {
     template <typename T>
     static void inline_destroy(void *dest);
 
-    // simple copy/move/detroy
+    // trivial copy/move
     static void trivial_copy(void *dest, const void *source);
     static void trivial_move(void *dest, void *source);
-    static void trivial_destroy(void *dest);
 
     // heap copy/move/destroy
     template <typename T>
@@ -248,8 +245,6 @@ namespace delegate_impl {
     // provides vtable which does nothing
     static const vtable *make_null();
 
-    // provides vtable for trivially constructible, destructible and moveable
-    // type
   };
 } // namespace delegate_impl
 
@@ -501,9 +496,6 @@ inline void delegate_impl::vtable::trivial_copy(void *dest, const void *source) 
 
 inline void delegate_impl::vtable::trivial_move(void *dest, void *source) {
   std::memcpy(dest, source, delegate_impl::max_storage_size);
-}
-
-inline void delegate_impl::vtable::trivial_destroy(void *dest) {
 }
 
 template <typename T>
