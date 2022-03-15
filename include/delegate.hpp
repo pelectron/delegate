@@ -435,8 +435,8 @@ Ret delegate<Ret(Args...)>::null_invoke(void *, Args...) {
   // and Ret is constructible with no arguments, a statically allocated value of
   // Ret is returned.
   if constexpr ((!std::is_same_v<Ret, void>)&&std::is_constructible_v<
-                    std::remove_all_extents_t<Ret>>) {
-    static std::remove_all_extents_t<Ret> r{};
+                    std::decay_t<Ret>>) {
+    static std::decay_t<Ret> r{};
     return r;
   }
 }
