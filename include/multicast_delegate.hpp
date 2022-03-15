@@ -190,7 +190,6 @@ Ret multicast_delegate<Ret(Args...)>::get(size_t n) {
   }
 }
 
-/// clear the results vector
 template <typename Ret, typename... Args>
 void multicast_delegate<Ret(Args...)>::clear_results() {
   if constexpr (!void_ret) {
@@ -230,29 +229,40 @@ void multicast_delegate<Ret(Args...)>::bind(F &&f) {
   delegates.push_back(delegate<Ret(Args...)>(std::forward<F>(f)));
 }
 
-// delegate iteration functions
+template <typename Ret, typename... Args>
+void multicast_delegate<Ret(Args...)>::bind(const delegate<Ret(Args...)> &d) {
+  delegates.push_back(d);
+}
+
+template <typename Ret, typename... Args>
+void multicast_delegate<Ret(Args...)>::bind(delegate<Ret(Args...)> &&d) {
+  delegates.push_back(std::move(d));
+}
+
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::delegate_iterator
     multicast_delegate<Ret(Args...)>::delegate_begin() {
   return delegates.begin();
 }
+
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::const_delegate_iterator
     multicast_delegate<Ret(Args...)>::delegate_begin() const {
   return delegates.begin();
 }
+
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::delegate_iterator
     multicast_delegate<Ret(Args...)>::delegate_end() {
   return delegates.end();
 }
+
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::const_delegate_iterator
     multicast_delegate<Ret(Args...)>::delegate_end() const {
   return delegates.end();
 }
 
-// result iteration functions
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::result_iterator
     multicast_delegate<Ret(Args...)>::begin() {
