@@ -505,9 +505,9 @@ template <typename T> void delegate_impl::vtable::heap_destroy(void *dest) {
   }
 }
 
-void delegate_impl::vtable::null_copy(void *, const void *) {}
-void delegate_impl::vtable::null_move(void *, void *) {}
-void delegate_impl::vtable::null_destroy(void *) {}
+inline void delegate_impl::vtable::null_copy(void *, const void *) {}
+inline void delegate_impl::vtable::null_move(void *, void *) {}
+inline void delegate_impl::vtable::null_destroy(void *) {}
 
 template <typename T>
 delegate_impl::vtable *delegate_impl::vtable::make_inline() {
@@ -525,14 +525,14 @@ delegate_impl::vtable *delegate_impl::vtable::make_heap() {
   return &impl;
 }
 
-delegate_impl::vtable *delegate_impl::vtable::make_simple() {
+inline delegate_impl::vtable *delegate_impl::vtable::make_simple() {
   static delegate_impl::vtable impl{&delegate_impl::vtable::simple_copy,
                                     &delegate_impl::vtable::simple_move,
                                     &delegate_impl::vtable::simple_destroy};
   return &impl;
 }
 
-delegate_impl::vtable *delegate_impl::vtable::make_null() {
+inline delegate_impl::vtable *delegate_impl::vtable::make_null() {
   static delegate_impl::vtable impl{&delegate_impl::vtable::null_copy,
                                     &delegate_impl::vtable::null_move,
                                     &delegate_impl::vtable::null_destroy};
