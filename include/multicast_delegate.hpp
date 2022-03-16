@@ -53,19 +53,33 @@ namespace mc_delegate_detail {
 
 /**
  * @brief the multicast_delegate class can bind any amount of callables, execute
- * them and collect the returned values. The class is essentially a wrapper
- * around a std::vector of delegate<Ret(Args...)> and std::vector of Ret.
- * Everytime a multi_cast_delegate gets called, the returned values get pushed
- * back into the results vector. The results vector can be cleared with the
- * clear_results member function. The delegate vector can be cleared with the
- * reset member function. The results vector does not get cleared before
- * invoking the stored callables.
- * @details If Ret is void, then calling any of the result iteration functions
- * result in a static_assert error. If Ret is a lvalue reference type, i.e. T&
- * or const T&, where T is Ret with all reference specifiers removed, then the
- * value returned by the delegates will be stored in a
- * std::reference_wrapper<T/const T>. If Ret is a rvalue reference, i.e. T&&,
- * then the return value of the delegates will be moved into the results vector.
+ * them and collect the returned values.
+ * @details The class is essentially a wrapper around a std::vector of
+ * delegate<Ret(Args...)> (called delegate vector from now on) and std::vector
+ * of Ret (called results vector from now on), and provides a simple interface
+ * for them. Using bind() with a callable appends a delegate to the delegate
+ * vector. Calling the multicast_delegate means calling each delegate in the
+ * delegate vector and **appending** the returned value in the results vector.
+ * The results vector can then be iterated through the various the begin/end and
+ * cbegin/cend member functions. Note that result iterators are invalidated when
+ * calling the multicast_delegate again, as the results vector may need to
+ * reallocate when pushing back new values.
+ * The results vector can then be cleared with the clear_results() member
+ * function.
+ * Using reset() on a multicast_delegate has the same effect as on a normal
+ * delegate. It unbinds all callables by clearing the delegate vector.
+ *
+ * To clear both vectors at once, use the total_reset() member function.
+ *
+ * @note Depending on the return type of the delegate, the underlying way of
+ * storing the returned values can change quite a bit. Suppose T is the type one
+ * gets when removing all reference and const qualifiers from the return type
+ * Ret. If Ret is a reference type, i.e. Ret = T& or Ret = const T&, then the
+ * results vector must store the return values in a std::reference_wrapper.
+ * If Ret is an rvalue reference, i.e. Ret = T&&, then the underlying storage is
+ * a std::vector<T>. The return values are simply moved into the vector.
+ * If Ret = void, then there is no results vector and all calls to the result
+ * iteration functions will result in compilation failure via static_assert.
  *
  * @tparam Ret return type of the delegate
  * @tparam Args argument types of the delegate
@@ -73,14 +87,21 @@ namespace mc_delegate_detail {
 template <typename Ret, typename... Args>
 class multicast_delegate<Ret(Args...)> {
 public:
-  static constexpr bool void_ret = std::is_same_v<Ret, void>;
+  // delegate type
   using delegate_t = delegate<Ret(Args...)>;
+  // delegate vector type
   using delegate_vector_t = std::vector<delegate_t>;
+  // value_type of the results vector
   using result_storage_t = mc_delegate_detail::value_collector_t<Ret>;
+  // results vector type
   using result_vector_t = typename result_storage_t::vector_type;
+  // result iterator type
   using result_iterator = typename result_storage_t::iterator;
+  // const result iterator type
   using const_result_iterator = typename result_storage_t::const_iterator;
+  // delegate iterator type
   using delegate_iterator = typename delegate_vector_t::iterator;
+  // const delegate iterator type
   using const_delegate_iterator = typename delegate_vector_t::const_iterator;
 
   multicast_delegate() = default;
@@ -106,6 +127,9 @@ public:
   /// vector will be unchanged.
   void reset();
 
+  /// equivalent to calling clear_results() and reset().
+  void total_reset();
+  
   /// append a new delegate
   void bind(Ret (*free_function)(Args...));
 
@@ -151,7 +175,7 @@ private:
 
 template <typename Ret, typename... Args>
 void multicast_delegate<Ret(Args...)>::operator()(Args &&...args) {
-  if constexpr (void_ret) {
+  if constexpr (std::is_same_v<Ret, void>) {
     for (auto &del : delegates) {
       del(std::forward<Args>(args)...);
     }
@@ -175,7 +199,7 @@ size_t multicast_delegate<Ret(Args...)>::num_callables() const {
 
 template <typename Ret, typename... Args>
 size_t multicast_delegate<Ret(Args...)>::num_results() const {
-  if constexpr (!void_ret) {
+  if constexpr (!std::is_same_v<Ret, void>) {
     return collector.values.size();
   } else
     return 0;
@@ -183,8 +207,9 @@ size_t multicast_delegate<Ret(Args...)>::num_results() const {
 
 template <typename Ret, typename... Args>
 Ret multicast_delegate<Ret(Args...)>::get(size_t n) {
-  if constexpr (void_ret)
-    static_assert(!void_ret, "Cannot call this function with Ret = void.");
+  if constexpr (std::is_same_v<Ret, void>)
+    static_assert(!std::is_same_v<Ret, void>,
+                  "Cannot call this function with Ret = void.");
   else {
     return collector[n];
   }
@@ -192,7 +217,7 @@ Ret multicast_delegate<Ret(Args...)>::get(size_t n) {
 
 template <typename Ret, typename... Args>
 void multicast_delegate<Ret(Args...)>::clear_results() {
-  if constexpr (!void_ret) {
+  if constexpr (!std::is_same_v<Ret, void>) {
     collector.values.clear();
   }
 }
@@ -266,8 +291,9 @@ typename multicast_delegate<Ret(Args...)>::const_delegate_iterator
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::result_iterator
     multicast_delegate<Ret(Args...)>::begin() {
-  if constexpr (void_ret)
-    static_assert(!void_ret, "Cannot call this function with Ret = void.");
+  if constexpr (std::is_same_v<Ret, void>)
+    static_assert(!std::is_same_v<Ret, void>,
+                  "Cannot call this function with Ret = void.");
   else {
     return collector.values.begin();
   }
@@ -276,8 +302,9 @@ typename multicast_delegate<Ret(Args...)>::result_iterator
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::result_iterator
     multicast_delegate<Ret(Args...)>::end() {
-  if constexpr (void_ret)
-    static_assert(!void_ret, "Cannot call this function with Ret = void.");
+  if constexpr (std::is_same_v<Ret, void>)
+    static_assert(!std::is_same_v<Ret, void>,
+                  "Cannot call this function with Ret = void.");
   else {
     return collector.values.end();
   }
@@ -286,8 +313,9 @@ typename multicast_delegate<Ret(Args...)>::result_iterator
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::const_result_iterator
     multicast_delegate<Ret(Args...)>::begin() const {
-  if constexpr (void_ret)
-    static_assert(!void_ret, "Cannot call this function with Ret = void.");
+  if constexpr (std::is_same_v<Ret, void>)
+    static_assert(!std::is_same_v<Ret, void>,
+                  "Cannot call this function with Ret = void.");
   else {
     return collector.values.begin();
   }
@@ -296,8 +324,9 @@ typename multicast_delegate<Ret(Args...)>::const_result_iterator
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::const_result_iterator
     multicast_delegate<Ret(Args...)>::end() const {
-  if constexpr (void_ret)
-    static_assert(!void_ret, "Cannot call this function with Ret = void.");
+  if constexpr (std::is_same_v<Ret, void>)
+    static_assert(!std::is_same_v<Ret, void>,
+                  "Cannot call this function with Ret = void.");
   else {
     return collector.values.end();
   }
@@ -306,8 +335,9 @@ typename multicast_delegate<Ret(Args...)>::const_result_iterator
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::const_result_iterator
     multicast_delegate<Ret(Args...)>::cbegin() const {
-  if constexpr (void_ret)
-    static_assert(!void_ret, "Cannot call this function with Ret = void.");
+  if constexpr (std::is_same_v<Ret, void>)
+    static_assert(!std::is_same_v<Ret, void>,
+                  "Cannot call this function with Ret = void.");
   else {
     return collector.values.begin();
   }
@@ -316,8 +346,9 @@ typename multicast_delegate<Ret(Args...)>::const_result_iterator
 template <typename Ret, typename... Args>
 typename multicast_delegate<Ret(Args...)>::const_result_iterator
     multicast_delegate<Ret(Args...)>::cend() const {
-  if constexpr (void_ret)
-    static_assert(!void_ret, "Cannot call this function with Ret = void.");
+  if constexpr (std::is_same_v<Ret, void>)
+    static_assert(!std::is_same_v<Ret, void>,
+                  "Cannot call this function with Ret = void.");
   else {
     return collector.values.end();
   }
