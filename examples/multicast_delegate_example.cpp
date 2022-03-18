@@ -1,6 +1,6 @@
 /**
- * @example multicast_delegate.cpp
- * @author Pele Constam (pele.constam@gmail.com)
+ * @example multicast_delegate_example.cpp
+ * @author Pele Constam (pelectron1602@gmail.com)
  * @brief This files contains a basic useage example of the multicast_delegate
  * class.
  * @version 0.1
@@ -10,7 +10,7 @@
  * (See accompanying file LICENSE_1_0.txt or copy at
  * https://www.boost.org/LICENSE_1_0.txt) *
  */
-#include "multicast_delegate.hpp"
+#include "../include/multicast_delegate.hpp"
 
 #include <iostream>
 
