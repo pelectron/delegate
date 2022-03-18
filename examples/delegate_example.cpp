@@ -1,6 +1,6 @@
 /**
  * @example delegate_example.cpp
- * @author Pele Constam (pele.constam@gmail.com)
+ * @author Pele Constam (pelectron1602@gmail.com)
  * @brief This file contains a basic useage example of the delegate class.
  * @version 0.1
  * @date 2022-03-14
@@ -10,7 +10,7 @@
  * (See accompanying file LICENSE_1_0.txt or copy at
  * https://www.boost.org/LICENSE_1_0.txt)
  */
-#include "delegate.hpp"
+#include "../include/delegate.hpp"
 
 #include <iostream>
 using namespace pc;

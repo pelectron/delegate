@@ -1,6 +1,6 @@
 /**
  * @file delegate.t.cpp
- * @author Pele Constam (pele.constam@gmail.com)
+ * @author Pele Constam (pelectron1602@gmail.com)
  * @brief This file contains the test for the delegate class.
  * @version 0.1
  * @date 2022-03-14

@@ -1,6 +1,6 @@
 /**
  * @file multicast_delegate.hpp
- * @author your name (you@domain.com)
+ * @author Pele Constam (pelectron1602@gmail.com)
  * @brief This file defines the multicast_delegate class.
  * @version 0.1
  * @date 2022-03-18
@@ -18,7 +18,7 @@
 namespace pc {
   /// forward declaration, intentionally left unimplemented.
   /// @sa delegate<Ret(Args...)>
-  template <typename Signature>
+  template <typename>
   class multicast_delegate;
 
   namespace impl {
@@ -115,7 +115,7 @@ namespace pc {
    *
    * @tparam Ret return type of the delegate
    * @tparam Args argument types of the delegate
-   * @see multicast_delegate.cpp
+   * @see multicast_delegate_example.cpp
    */
   template <typename Ret, typename... Args>
   class multicast_delegate<Ret(Args...)> {
