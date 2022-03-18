@@ -1,12 +1,10 @@
-# read me
+# delegate
 Welcome to this repository. It contains a header only c++17 delegate implementation. A delegate is used to invoke free functions, member functions and function objects in a uniform manner. It contains two classes: delegate, which can only bind to a single callable, and multicast_delegate, which can bind multiple callables and collect their return values.
-If you find any bugs, unexpected behavior or failing tests feel free to contact me.
+If you find any bugs, unexpected behavior , failing tests on your system or just general feedback on the code, feel free to contact me at pelectron1602@gmail.com, make a pull request or start an issue. It would be awesome to get some feedback.
 
 # how to use
 The examples folder contains fully documented examples of the delegate and multicast_delegate class. 
-
 Short version:
-
 Suppose we have a free function.
 ```cpp 
 int calc(int i) { return i; }
@@ -116,14 +114,41 @@ And then use it in some executable/library/whatever you are trying to create:
 
 # how to build the project with meson
 Clone the project. ``cd`` to the directory containing the meson.build file in your preferred terminal. Enter the following lines:
-  - ``meson setup build``
-  - ``meson compile -C build``
-  
-Afterwards, the example and the test executable should be in the build folder, if the setup and compile steps were successful. There should not be any build errors with the test, as I have included a copy of catch2 in the repository.
+``meson setup build``
+If this was successful, compile with
+``meson compile -C build``
+Afterwards, the examples and the test executable should be in the build folder, if the setup and compile steps were successful. There should not be any build errors with the test, as I have included a copy of catch2 in this repository. 
 
 # how to build without meson
-The example should be buildable without much hassle. Just add the 'include' folder to the include path and compile the files in the examples folder. They are standalone, so no linking or extra steps required.
-The test is not simple to build if you don't already have a copy of catch2 and know how to build/link against it.I have however included a copy of catch2 in the subprojects folder.
+To use the library, no actual building is required. However, building and debugging the examples and tests to understand the underlying code can be helpful and fun, so I try to provide instructions for doing so with only the command line and a compiler. It may not perfectly work on your system and need some adjustment. I assume you have clang installed. If not, you will probably have to change the flag syntax.
+Firstly, change into the directory containing this readme file and setup your build directory.
+```shell
+mkdir build
+```
+Building the examples:
+```shell
+clang++ examples/delegate_example.cpp -std=c++17 -o build/delegate_example
+clang++ examples/multicast_delegate_example.cpp -std=c++17 -o build/multicast_delegate_example
+```
+on windows with clang:
+```shell
+clang++ examples/delegate_example.cpp -std=c++17 -o build/delegate_example.exe
+clang++ examples/multicast_delegate_example.cpp -std=c++17 -o build/multicast_delegate_example.exe
+```
+This gives you two executables in the build folder called delegate_example and multicast_delegate_example.
+Building the test is similar:
+```shell
+clang++ tests/delegate.t.cpp tests/multicast_delegate.t.cpp tests/r_value_ref_test.cpp tests/test_main.cpp -std=c++17 -Iinclude -Isubprojects/Catch2-2.13.7/single_include -o build/test_main
+```
+And again on windows with clang:
+```shell
+clang++ tests/delegate.t.cpp tests/multicast_delegate.t.cpp tests/r_value_ref_test.cpp tests/test_main.cpp -std=c++17 -Iinclude -Isubprojects/Catch2-2.13.7/single_include -o build/test_main.exe
+```
+
+This should give you a executable called test_main in the build folder. If you run it, all tests should pass and green printed should appear like below
+
+<span style="color:green">===============================================================================
+All tests passed (x assertions in y test cases)</span>'
 
 # License
 This project is distributed under the Boost Software License version 1.0. See LICENSE_1_0.txt for more details.
