@@ -2,8 +2,8 @@
 \tableofcontents
 # About
 Welcome to this repository. It contains a header only c++17 delegate implementation. A delegate is used to invoke free functions, member functions and function objects in a uniform manner. Two classes are provided: 
- - \link pc::delegate<Ret(Args...)> delegate \endlink, which can only bind to a single callable
- - and \link pc::multicast_delegate<Ret(Args...)> multicast_delegate \endlink, which can bind multiple callables and collect their return values.
+ - pc::delegate, which can only bind to a single callable
+ - and pc::multicast_delegate, which can bind multiple callables and collect their return values.
 
 If you find any bugs, unexpected behavior, failing tests, general feedback or improvements on the code, feel free to contact me at pelectron1602@gmail.com, make a pull request or start an issue. It would be awesome to get some feedback.
 
