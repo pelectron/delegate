@@ -2,8 +2,8 @@
 \tableofcontents
 # About
 Welcome to this repository. It contains a header only c++17 delegate implementation. A delegate is used to invoke free functions, member functions and function objects in a uniform manner. Two classes are provided: 
- - pc::delegate, which can only bind to a single callable
- - and pc::multicast_delegate, which can bind multiple callables and collect their return values.
+ - @link pc::delegate<Ret(Args...)> pc::delegate @endlink, which can only bind to a single callable
+ - and @link pc::multicast_delegate<Ret(Args...)> pc::multicast_delegate @endlink, which can bind multiple callables and collect their return values.
 
 If you find any bugs, unexpected behavior, failing tests, general feedback or improvements on the code, feel free to contact me at pelectron1602@gmail.com, make a pull request or start an issue. It would be awesome to get some feedback.
 
@@ -27,7 +27,7 @@ And some function object with the same calling signature:
    return 2*i; 
    };
 ```
-With the delegate class, it is possible to execute them in a uniform manner.
+With the @link pc::delegate<Ret(Args...)> pc::delegate @endlink class, it is possible to execute them in a uniform manner.
 ```cpp
 #include "delegate.hpp"
 #include <iostream>
@@ -100,24 +100,22 @@ int main(){
   multi_delegate.total_reset();
   std::cout << "number of results (after total_reset()) = " << multi_delegate.num_results() << ".\n";
   std::cout << "number of callables bound (after total_reset()) = " << multi_delegate.num_callables() << ",\n";
+  return 0;
 }
 ```
 
 # How to include in your own projects
-1. <a href="https://github.com/pelectron/delegate/archive/refs/heads/master.zip">Download</a> or <a href="https://github.com/pelectron/delegate.git">clone</a> the git project. 
+1. <a href="https://github.com/pelectron/delegate/archive/refs/heads/master.zip">**Download the zip**</a> or <a href="https://github.com/pelectron/delegate.git">**clone**</a> the git project. 
 2. Add the 'include' directory to your compiler or build system's include path. 
 3. Add ``#include "delegate.hpp"`` or ``#include "multicast_delegate.hpp"`` to your sources.
 
 # How to include in meson projects
 Either create a meson wrap file, or clone the project into your subprojects directory. Add the following line to your meson.build file: 
-``delegate_dep = dependency('delegate', fallback:['delegate', 'delegate_dep'])``
-
-And then use it in some executable/library/whatever you are trying to create:
-``my_exe = executable('my_exe', my_sources, dependencies:[delegate_dep,...], ...)``
+``delegate_dep = dependency('delegate', fallback:['delegate', 'delegate_dep'])``.Then use it in some executable/library/whatever you are trying to create, e.g. ``my_exe = executable('my_exe', my_sources, dependencies:[delegate_dep,...], ...)``
 
 # How to build the examples/tests with meson
-``cd`` to the directory containing the ``meson.build`` file in your preferred terminal. Enter the following lines:``meson setup build``. If this was successful, compile with
-``meson compile -C build``. Afterwards, the examples and the test executable should be in the build directory, if the setup and compile steps were successful. There should not be any build errors with the test, as I have included a copy of catch2 in this repository. The two example executables will be named delegate_example and multicast_delegate_example. The test executable is called test_main.
+``cd`` into the directory containing the ``meson.build`` file in your preferred terminal. Enter the following lines:``meson setup build``. If this was successful, compile with
+``meson compile -C build``. Afterwards, the examples and the test executable should be in the **build** directory, if the setup and compile steps were successful. There should not be any build errors with the test, as I have included a copy of <a href ="https://github.com/catchorg/Catch2.git">catch2</a> in this repository. The two example executables will be named **delegate_example** and **multicast_delegate_example**. The test executable is called **test_main**.
 
 # How to build without meson
 To use the library, no actual building is required. However, building and debugging the examples and tests to understand the underlying code can be helpful and fun, so I try to provide instructions for doing so with only the command line and a compiler. It may not perfectly work on your system and need some adjustment. I assume you have clang installed. If not, you will probably have to change the flag syntax.
