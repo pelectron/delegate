@@ -8,18 +8,21 @@
  * Copyright Pele Constam 2022.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
- * https://www.boost.org/LICENSE_1_0.txt) *
+ * https://www.boost.org/LICENSE_1_0.txt) 
+ * \tableofcontents
  */
-#ifndef PCON_MULTICAST_DELEGATE_HPP
-#define PCON_MULTICAST_DELEGATE_HPP
+#ifndef PC_MULTICAST_DELEGATE_HPP
+#define PC_MULTICAST_DELEGATE_HPP
 #include "delegate.hpp"
 
 #include <vector>
+
 namespace pc {
+#ifndef GENERATING_DOCUMENTATION
   /// forward declaration, intentionally left unimplemented.
-  /// @sa delegate<Ret(Args...)>
   template <typename>
   class multicast_delegate;
+#endif
 
   namespace impl {
 
@@ -121,7 +124,7 @@ namespace pc {
   class multicast_delegate<Ret(Args...)> {
   public:
     /// single delegate type.
-    using delegate_t = delegate<Ret(Args...)>;
+    using delegate_t = ::pc::delegate<Ret(Args...)>;
     /// delegate vector type.
     using delegate_vector_t = std::vector<delegate_t>;
     /// types that stores returned values.
@@ -201,20 +204,20 @@ namespace pc {
      */
     template <typename F,
               std::enable_if_t<!std::is_same_v<
-                  std::decay_t<F>, delegate<Ret(Args...)>>> * = nullptr>
+                  std::decay_t<F>, delegate_t>> * = nullptr>
     void bind(F &&f);
 
     /**
      * @brief bind a delegate. This appends d to the delegate vector.
      * @param d delegate
      */
-    void bind(delegate<Ret(Args...)> &&d);
+    void bind(delegate_t &&d);
 
     /**
      * @brief bind a delegate. This appends d to the delegate vector.
      * @param d delegate
      */
-    void bind(const delegate<Ret(Args...)> &d);
+    void bind(const delegate_t &d);
 
     /// get iterator to the beginning of the delegate array.
     multicast_delegate::delegate_iterator delegate_begin();
@@ -318,14 +321,14 @@ namespace pc {
 
   template <typename Ret, typename... Args>
   void multicast_delegate<Ret(Args...)>::bind(Ret (*free_function)(Args...)) {
-    delegates.push_back(delegate<Ret(Args...)>(free_function));
+    delegates.push_back(delegate_t(free_function));
   }
 
   template <typename Ret, typename... Args>
   template <typename T>
   void multicast_delegate<Ret(Args...)>::bind(T &object,
                                               Ret (T::*member_func)(Args...)) {
-    delegates.push_back(delegate<Ret(Args...)>(object, member_func));
+    delegates.push_back(delegate_t(object, member_func));
   }
 
   template <typename Ret, typename... Args>
@@ -333,23 +336,23 @@ namespace pc {
   void multicast_delegate<Ret(Args...)>::bind(T &object,
                                               Ret (T::*member_func)(Args...)
                                                   const) {
-    delegates.push_back(delegate<Ret(Args...)>(object, member_func));
+    delegates.push_back(delegate_t(object, member_func));
   }
 
   template <typename Ret, typename... Args>
   template <typename F, std::enable_if_t<!std::is_same_v<
                             std::decay_t<F>, delegate<Ret(Args...)>>> *>
   void multicast_delegate<Ret(Args...)>::bind(F &&f) {
-    delegates.push_back(delegate<Ret(Args...)>(std::forward<F>(f)));
+    delegates.push_back(delegate_t(std::forward<F>(f)));
   }
 
   template <typename Ret, typename... Args>
-  void multicast_delegate<Ret(Args...)>::bind(const delegate<Ret(Args...)> &d) {
+  void multicast_delegate<Ret(Args...)>::bind(const delegate_t &d) {
     delegates.push_back(d);
   }
 
   template <typename Ret, typename... Args>
-  void multicast_delegate<Ret(Args...)>::bind(delegate<Ret(Args...)> &&d) {
+  void multicast_delegate<Ret(Args...)>::bind(delegate_t &&d) {
     delegates.push_back(std::move(d));
   }
 

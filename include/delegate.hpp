@@ -1,7 +1,7 @@
 /**
  * @file delegate.hpp
  * @author Pele Constam (pelectron1602@gmail.com)
- * @brief This file defines the delegate class.
+ * @brief This file defines and implements the delegate class.
  * @version 0.1
  * @date 2022-03-14
  *
@@ -9,13 +9,20 @@
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * https://www.boost.org/LICENSE_1_0.txt)
+ * \tableofcontents
  */
-#ifndef PCON_DELEGATE_HPP
-#define PCON_DELEGATE_HPP
+#ifndef PC_DELEGATE_HPP
+#define PC_DELEGATE_HPP
 #include <cstring>
 #include <new>
 #include <type_traits>
 namespace pc {
+#ifndef GENERATING_DOCUMENTATION
+  // forward declaration, intentionally left unimplemented
+  template <typename>
+  class delegate;
+#endif
+
   namespace impl {
     struct vtable; // forward declaration
     /// the maximum size a callable can be before it gets allocated on the heap.
@@ -24,11 +31,6 @@ namespace pc {
     /// object
     static constexpr size_t max_storage_size = 16u;
   } // namespace impl
-
-  /// forward declaration, intentionally left unimplemented
-  /// @see delegate<Ret(Args...)>
-  template <typename>
-  class delegate;
 
   /**
    * @brief This class can be used to execute free functions, member functions
@@ -47,33 +49,39 @@ namespace pc {
    *
    * Theory of operation:
    * The class consists of three main elements. A raw memory buffer of
-   * 16 bytes(called  \a storage), a pointer to a free function with signature
-   * Ret(void*,Args...) (called \a invoke) and a pointer to a static vtable
-   * (called \a table).
+   * 16 bytes(called  \link pc::delegate<Ret(Args...)>::storage storage
+   * \endlink), a pointer to a free function with signature Ret(void*,Args...)
+   * (called \link pc::delegate<Ret(Args...)>::invoke invoke \endlink) and a
+   * pointer to a static vtable (called \link pc::delegate<Ret(Args...)>::table
+   * table \endlink).
    *
    * The raw memory buffer is used to hold the callable data, a.k.a. either a
    * pointer a free function, a instance of mfn_holder_t/const_mfn_holder_t, a
    * instance of a passed in functor (sizeof(functor)<=16), or a pointer to a
    * heap allocated instance of a functor (sizeof(functor)>16)).
    *
-   * To call the delegate, the address of the raw memory \a storage is passed to
-   * the \a invoke member as a void*, along with the arguments. The function
-   * \a invoke points to must know how to correctly cast the type back from the
-   * void* and execute the free function/member function/function object stored
-   * in the delegate. The private static member functions null_invoke(),
-   * mfn_invoke<T>(), const_mfn_invoke<T>(), inline_invoke<T>() and
-   * heap_invoke<T>() implement this behaviour.
+   * To call the delegate, the address of the raw memory 
+   * \link pc::delegate<Ret(Args...)>::storage storage \endlink is passed to the \a
+   * invoke member as a void*, along with the arguments. The function 
+   * \link pc::delegate<Ret(Args...)>::invoke invoke \endlink points to must know how
+   * to correctly cast the type back from the void* and execute the free
+   * function/member function/function object stored in the delegate. The
+   * private static member functions null_invoke(), mfn_invoke<T>(),
+   * const_mfn_invoke<T>(), inline_invoke<T>() and heap_invoke<T>() implement
+   * this behaviour.
    *
-   * The \a table member is not a "real" compiler generated vtable, but a
-   * instance of a custom 'vtable' type. The vtable type holds pointers the
-   * functions needed to copy, move and destroy a callable of a certain type
-   * correctly. The \a table knows how to copy/move it's delegate's
-   * \a storage into another's, but not the reverse. This should become clear in
-   * the copy/move constructors/assignment operators.
+   * The \link pc::delegate<Ret(Args...)>::table table \endlink member is not a
+   * "real" compiler generated vtable, but a instance of a custom 'vtable' type.
+   * The vtable type holds pointers the functions needed to copy, move and
+   * destroy a callable of a certain type correctly. The 
+   * \link pc::delegate<Ret(Args...)>::table table \endlink knows how to copy/move
+   * it's delegate's \link pc::delegate<Ret(Args...)>::storage storage \endlink
+   * into another's, but not the reverse. This should become clear in the
+   * copy/move constructors/assignment operators.
    *
    * @tparam Ret return type of callable
    * @tparam Args argument types of callable
-   *  \sa delegate_example.cpp
+   * @see delegate_example.cpp
    *
    */
   template <typename Ret, typename... Args>
@@ -224,17 +232,14 @@ namespace pc {
     static Ret null_invoke(void *, Args...);
 
     /// raw storage type
-    using Storage_t = std::aligned_storage_t<impl::max_storage_size, 8>;
+    using Storage_t = std::aligned_storage_t<pc::impl::max_storage_size, 8>;
     /// type of invoke member
     using InvokeFuncPtr_t = Ret (*)(void *, Args...);
-
-    /// holds either free function pointer, inline stored functor or pointer to
-    /// heap allocated functor
-    Storage_t storage;
-    /// invokes the actual function/functor stored in the delegate
-    InvokeFuncPtr_t invoke;
-    /// vtable containing move/copy/destroy functions
-    const impl::vtable *table;
+    // clang-format off
+    Storage_t storage; ///< holds either free function pointer, inline stored functor or pointer to heap allocated functor
+    InvokeFuncPtr_t invoke; ///< invokes the actual function/functor stored in the delegate
+    const impl::vtable* table; ///< vtable containing pointers to move/copy/destroy functions
+    // clang-format on
   };
 
   namespace impl {
@@ -464,10 +469,10 @@ namespace pc {
     table = impl::vtable::make_trivial();
     new (&storage) impl::mfn_holder_t<T, Ret, Args...>{object, member_func};
     static_assert(sizeof(impl::mfn_holder_t<T, Ret, Args...>) <=
-                      impl::max_storage_size,
+                      pc::impl::max_storage_size,
                   "Something wrong in the implementation. The structure "
                   "impl::mfn_holder_t<T, Ret, Args...> is too big to fit into "
-                  "aligned storage of size 'impl::max_storage_size'");
+                  "aligned storage of size 'pc::impl::max_storage_size'");
   }
 
   template <typename Ret, typename... Args>
@@ -480,11 +485,11 @@ namespace pc {
     new (&storage)
         impl::const_mfn_holder_t<T, Ret, Args...>(object, member_func);
     static_assert(sizeof(impl::const_mfn_holder_t<T, Ret, Args...>) <=
-                      impl::max_storage_size,
+                      pc::impl::max_storage_size,
                   "Something wrong in the implementation. The structure "
                   "impl::const_mfn_holder_t<T, Ret, Args...> is too big "
                   "to fit into "
-                  "aligned storage of size 'impl::max_storage_size'");
+                  "aligned storage of size 'pc::impl::max_storage_size'");
   }
 
   template <typename Ret, typename... Args>
@@ -604,11 +609,11 @@ namespace pc {
   }
 
   inline void impl::vtable::trivial_copy(void *dest, const void *source) {
-    std::memcpy(dest, source, impl::max_storage_size);
+    std::memcpy(dest, source, pc::impl::max_storage_size);
   }
 
   inline void impl::vtable::trivial_move(void *dest, void *source) {
-    std::memcpy(dest, source, impl::max_storage_size);
+    std::memcpy(dest, source, pc::impl::max_storage_size);
   }
 
   template <typename T>
