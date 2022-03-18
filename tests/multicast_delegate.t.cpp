@@ -1,4 +1,5 @@
 #include "multicast_delegate.hpp"
+using namespace pc;
 
 int free_func(int a) { return a; }
 struct Functor {

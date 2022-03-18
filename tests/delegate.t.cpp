@@ -10,20 +10,22 @@
  * (See accompanying file LICENSE_1_0.txt or copy at
  * https://www.boost.org/LICENSE_1_0.txt)
  */
+#include "delegate.hpp"
+
 #include <iostream>
 
-#include "delegate.hpp"
+using namespace pc;
 
 /// helper to determine allocation counts
 class AllocCounter {
- public:
+public:
   static inline size_t alloc_count{0};
 
   AllocCounter() : start(alloc_count) {}
-  bool alloc_happend() const { return count() != 0; }
+  bool   alloc_happend() const { return count() != 0; }
   size_t count() const { return alloc_count - start; }
-  void reset() { start = alloc_count; }
-  void print_state() const {
+  void   reset() { start = alloc_count; }
+  void   print_state() const {
     if (alloc_happend()) {
       std::cout << "# of allocs: " << count() << "\n";
     } else {
@@ -31,19 +33,19 @@ class AllocCounter {
     }
   }
 
- private:
+private:
   size_t start;
 };
 /// helper to determine deallocation counts
 class DeAllocCounter {
- public:
+public:
   static inline size_t dealloc_count{0};
 
   DeAllocCounter() : start(dealloc_count) {}
-  bool dealloc_happend() const { return count() != 0; }
+  bool   dealloc_happend() const { return count() != 0; }
   size_t count() const { return dealloc_count - start; }
-  void reset() { start = dealloc_count; }
-  void print_state() const {
+  void   reset() { start = dealloc_count; }
+  void   print_state() const {
     if (dealloc_happend()) {
       std::cout << "# of allocs: " << count() << "\n";
     } else {
@@ -51,7 +53,7 @@ class DeAllocCounter {
     }
   }
 
- private:
+private:
   size_t start;
 };
 
@@ -90,29 +92,29 @@ struct ConstNoExceptS {
 };
 // big callable structure, i.e. much bigger than inlinebale size
 struct Big {
-  int operator()(int a) { return a; }
+  int  operator()(int a) { return a; }
   char buf[100];
 };
 // const version of Big
 struct ConstBig {
-  int operator()(int a) const { return a; }
+  int  operator()(int a) const { return a; }
   char buf[100];
 };
 // noexcept version of Big
 struct NoExceptBig {
-  int operator()(int a) noexcept { return a; }
+  int  operator()(int a) noexcept { return a; }
   char buf[100];
 };
 // const version of NoExceptBig
 struct ConstNoExceptBig {
-  int operator()(int a) const noexcept { return a; }
+  int  operator()(int a) const noexcept { return a; }
   char buf[100];
 };
 // small enough callable to be inlined
 struct SmallEnough {
   // SmallEnough()=default;
   // SmallEnough(SmallEnough&&)=default;
-  int operator()(int a) const { return a; }
+  int  operator()(int a) const { return a; }
   char buf[16];
 };
 // big moveable funcition object
@@ -123,7 +125,7 @@ struct BigMove {
     other.moved_from = true;
     other.moved_to = false;
   }
-  int operator()(int a) { return a; }
+  int  operator()(int a) { return a; }
   bool moved_to{false};
   bool moved_from = {false};
   char buf[100]{0};
@@ -156,13 +158,12 @@ SCENARIO("Construction and delegation of a free function") {
   GIVEN("a free function") {
     WHEN("Constructing a delegate from it") {
       c.reset();
-      Del del(&f);
-      bool b = c.alloc_happend();  // write it like this
+      Del  del(&f);
+      bool b = c.alloc_happend(); // write it like this
       THEN("the delegate does not allocate") { REQUIRE_FALSE(b); }
       AND_THEN("the delegate is valid") { REQUIRE(del.is_valid()); }
-      AND_THEN(
-          "Calling the delegate results in the same value as a calling "
-          "the function directly") {
+      AND_THEN("Calling the delegate results in the same value as a calling "
+               "the function directly") {
         REQUIRE(del(5) == f(5));
       }
     }
@@ -174,13 +175,12 @@ SCENARIO("Construction and delegation of a non const member function") {
     S instance;
     WHEN("Constructing a delegate from it") {
       AllocCounter c;
-      Del del(instance, &S::member_func);
-      bool b = c.alloc_happend();
+      Del          del(instance, &S::member_func);
+      bool         b = c.alloc_happend();
       THEN("the delegate does not allocate") { REQUIRE_FALSE(b); }
       AND_THEN("The delegate is valid") { REQUIRE(del.is_valid()); }
-      AND_THEN(
-          "Calling the delegate results in the same value as a calling "
-          "the function") {
+      AND_THEN("Calling the delegate results in the same value as a calling "
+               "the function") {
         REQUIRE(del(5) == instance.member_func(5));
       }
     }
@@ -192,13 +192,12 @@ SCENARIO("Construction and delegation of a const member function") {
     ConstS const_inst;
     WHEN("Constructing a delegate from it") {
       AllocCounter c;
-      Del del(const_inst, &ConstS::member_func);
-      bool b = c.alloc_happend();
+      Del          del(const_inst, &ConstS::member_func);
+      bool         b = c.alloc_happend();
       THEN("the delegate does not allocate") { REQUIRE_FALSE(b); }
       AND_THEN("the delegate is valid") { REQUIRE(del.is_valid()); }
-      AND_THEN(
-          "Calling the delegate results in the same value as a calling "
-          "the function") {
+      AND_THEN("Calling the delegate results in the same value as a calling "
+               "the function") {
         REQUIRE(del(5) == const_inst.member_func(5));
       }
     }
@@ -211,13 +210,12 @@ SCENARIO("Construction and delegation of functors") {
     SmallEnough small;
     WHEN("constructing a delegate from it") {
       c.reset();
-      Del del(SmallEnough{});
+      Del  del(SmallEnough{});
       bool b = c.alloc_happend();
       THEN("the delegate does not allocate") { REQUIRE_FALSE(b); }
       AND_THEN("The delegate is valid") { REQUIRE(del.is_valid()); }
-      AND_THEN(
-          "calling the delegate results in the same value as a calling "
-          "the function") {
+      AND_THEN("calling the delegate results in the same value as a calling "
+               "the function") {
         REQUIRE(del(5) == small(5));
       }
     }
@@ -227,13 +225,12 @@ SCENARIO("Construction and delegation of functors") {
     ConstBig big;
     WHEN("constructing a delegate from it") {
       c.reset();
-      Del del(big);
+      Del  del(big);
       bool b = c.alloc_happend();
       THEN("the delegate allocates") { REQUIRE(b); }
       AND_THEN("the delegate is valid") { REQUIRE(del.is_valid()); }
-      AND_THEN(
-          "calling the delegate results in the same value as a calling "
-          "the function") {
+      AND_THEN("calling the delegate results in the same value as a calling "
+               "the function") {
         REQUIRE(del(5) == big(5));
       }
     }
@@ -241,7 +238,7 @@ SCENARIO("Construction and delegation of functors") {
 }
 
 SCENARIO("delegates can be moved") {
-  AllocCounter a_cnt;
+  AllocCounter   a_cnt;
   DeAllocCounter d_cnt;
   GIVEN("A delegate bound to a big functor") {
     Big big;
@@ -249,35 +246,35 @@ SCENARIO("delegates can be moved") {
     WHEN("moving the delegate") {
       a_cnt.reset();
       d_cnt.reset();
-      Del del2 = std::move(del);
+      Del  del2 = std::move(del);
       bool allocated = a_cnt.alloc_happend();
       THEN("the new delegate did not allocate") { REQUIRE_FALSE(allocated); }
       AND_THEN("the original delegate is invalid") {
         REQUIRE_FALSE(del.is_valid());
       }
       AND_THEN("the new delegate is valid") { REQUIRE(del2.is_valid()); }
-      AND_THEN(
-          "calling the new delegates results in the same return value as "
-          "calling the function directly") {
+      AND_THEN("calling the new delegates results in the same return value as "
+               "calling the function directly") {
         REQUIRE(big(5) == del2(5));
       }
     }
   }
   GIVEN("a delegate bound to a small functor or (member) function pointer") {
     SmallEnough small;
-    Del del(small);
+    Del         del(small);
     WHEN("moving the delegate") {
       a_cnt.reset();
       d_cnt.reset();
-      Del del2 = std::move(del);
+      Del  del2 = std::move(del);
       bool no_de_or_alloc =
           (not a_cnt.alloc_happend()) && (not d_cnt.dealloc_happend());
       THEN("no memory de/allocation took place") { REQUIRE(no_de_or_alloc); }
-      THEN("the original delegate is invalid") { REQUIRE_FALSE(del.is_valid()); }
+      THEN("the original delegate is invalid") {
+        REQUIRE_FALSE(del.is_valid());
+      }
       AND_THEN("the new delegate is valid") { REQUIRE(del2.is_valid()); }
-      AND_THEN(
-          "calling the new delegates results in the same return value as "
-          "calling the function directly") {
+      AND_THEN("calling the new delegates results in the same return value as "
+               "calling the function directly") {
         REQUIRE(small(5) == del2(5));
       }
     }
@@ -325,7 +322,7 @@ SCENARIO("Binding to noexcept functions or functors") {
 
 SCENARIO("moveable function objects can be moved into a delegate") {
   GIVEN("a empty delegate and moveable functor") {
-    Del del;
+    Del     del;
     BigMove moveable;
     REQUIRE(((moveable.moved_from == false) && (moveable.moved_to == false)));
     WHEN("moving the functor") {

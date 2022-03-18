@@ -1,3 +1,4 @@
 subprojects/Catch2-2.13.7/**
 build/**
 .vscode/**
+docs/**

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+using namespace pc;
 
 static constexpr int expected = 2;
 int                &&free_func() {
@@ -27,7 +28,7 @@ SCENARIO("testing r value reference return type") {
   }
   GIVEN("a multicast_delegate") {
     multicast_delegate<int && (void)> del;
-    Functor     f;
+    Functor                           f;
     del.bind(&free_func);
     del.bind(Functor{});
     del.bind(f);

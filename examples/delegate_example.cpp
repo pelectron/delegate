@@ -1,7 +1,7 @@
 /**
- * @file delegate_example.cpp
+ * @example delegate_example.cpp
  * @author Pele Constam (pele.constam@gmail.com)
- * @brief This file contains an example of how to use the delegate class.
+ * @brief This file contains a basic useage example of the delegate class.
  * @version 0.1
  * @date 2022-03-14
  *
@@ -13,20 +13,20 @@
 #include "delegate.hpp"
 
 #include <iostream>
+using namespace pc;
+
 // custom assert macro
-#define assert(expr)                                                         \
-  if (!!!(expr)) {                                                           \
-    std::cout << "\nfailed assert on line " << (__LINE__) << "with expansion:\n" \
-              << #expr << "\n";                                              \
-  } else {                                                                   \
-    std::cout << "\nassertion successfull on line " << (__LINE__)              \
-              << " with expansion: " << #expr << "\n";                       \
+// if expr is evaluates to false, an assertion with the line number and string
+// representation
+#define assert(expr)                                      \
+  if (!bool(expr)) {                                      \
+    std::cout << "\nfailed assert on line " << (__LINE__) \
+              << "with expansion: '" << #expr << "'\n";   \
   }
 
 // below are some example free functions, custom function objects and lambdas to
 // show how to use a delegate. In this example, all function like things to
 // invoke will have a parameter list of int,float and return type float.
-
 float free_func(int a, float b) { return a * b; }
 
 struct SmallFunctor {
@@ -59,7 +59,9 @@ private:
   float  data[16]{0};
   size_t n{5};
 };
+
 auto lambda = [](int a, float f) -> float { return a + f; };
+
 auto lambda2 = lambda;
 
 int main() {
@@ -94,8 +96,9 @@ int main() {
   // delegates can be reset, and are invalid afterwards
   my_delegate.reset();
   assert(my_delegate.is_valid() == false);
+
   // Invoking a invalid delegate does not rely on/cause undefined behaviour.
-  // In case of a non void return value, a 0 initialized value should be
-  // returned
+  // In case of a non void return value, a statically allocated value will be
+  // returned.
   assert(my_delegate(5, 10.0f) == 0.0f);
 }
