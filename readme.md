@@ -10,6 +10,7 @@ If you find any bugs, unexpected behavior, failing tests, general feedback or im
 # How to use
 The examples directory contains fully documented examples of the delegate and multicast_delegate class. Here is a short version:
 Suppose we have a free function:
+
 ```cpp 
 int calc(int i) { return i; }
 ```
