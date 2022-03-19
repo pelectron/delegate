@@ -45,7 +45,7 @@ if get_option('build_docs').enabled() and doxygen.found()
   # on the echo and piping for passing params to doxygen.
   source_dir  = meson.current_source_dir()  # the directory this meson.build file is located in
   include_dir = source_dir / 'include'      # absolute path to include directory of the project
-  output_dir = source_dir / 'docs'          # absolute path to documentation output directory
+  output_dir = source_dir           # absolute path to documentation output directory
   example_dir = source_dir / 'examples'     # absolute path to examples directory
   readme_file = source_dir / 'readme.md'    # absolute path to readme file
   #input files and directories
