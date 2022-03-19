@@ -126,7 +126,7 @@ namespace pc {
     using delegate_t = ::pc::delegate<Ret(Args...)>;
     /// delegate vector type.
     using delegate_vector_t = std::vector<delegate_t>;
-    /// types that stores returned values.
+    /// type that stores returned values.
     using result_storage_t = impl::value_collector<Ret>;
     /// result iterator type.
     using result_iterator = typename result_storage_t::iterator;
