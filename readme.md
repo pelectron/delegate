@@ -166,7 +166,7 @@ This project is documented with doxygen. By default, using the doxyfile containe
 3. and lastly actually build the docs with ``ninja docs``
 
 # Contributing {#contributing}
-I welcome every pull request gladly. Please just make sure to format your pull request with the .clang-format file of this project. If you add a new feature, please also write a test for it with catch2 and add the test sources to the tests subdirectory along with appropriate documentation.
+I welcome every pull request gladly. Please just make sure to format your pull request with the .clang-format file of this project. If you add a new feature, please also write a test for it with <a href ="https://github.com/catchorg/Catch2.git">catch2</a> and add the test sources to the tests subdirectory along with appropriate documentation.
 
 # License {#license}
 This project is distributed under the Boost Software License version 1.0. See LICENSE_1_0.txt for more details.
