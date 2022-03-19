@@ -1,14 +1,16 @@
 \mainpage
 \tableofcontents
 # About
-Welcome to this repository. It contains a header only c++17 delegate implementation. A delegate is used to invoke free functions, member functions and function objects in a uniform manner. Two classes are provided: 
- - @link pc::delegate<Ret(Args...)> pc::delegate @endlink, which can only bind to a single callable
- - and @link pc::multicast_delegate<Ret(Args...)> pc::multicast_delegate @endlink, which can bind multiple callables and collect their return values.
+Welcome to this repository. It contains a header only c++17 delegate implementation. A delegate is used to invoke free functions, member functions and function objects in a uniform manner. Two classes are provided:
+
+ - [pc::delegate](@ref pc::delegate<Ret(Args...)>) , which can only bind to a single callable
+ - and [pc::multicast_delegate](@ref pc::multicast_delegate<Ret(Args...)>), which can bind multiple callables and collect their return values.
 
 If you find any bugs, unexpected behavior, failing tests, general feedback or improvements on the code, feel free to contact me at pelectron1602@gmail.com, make a pull request or start an issue. It would be awesome to get some feedback.
 
 # How to use
 The examples directory contains fully documented examples of the delegate and multicast_delegate class. Here is a short version:
+
 Suppose we have a free function:
 
 ```cpp 
@@ -54,7 +56,7 @@ int main(){
   return 0;
 }
 ```
-With the multicast_delegate class it is possible to bind and execute multiple callables and 'collect' their results.
+With the [pc::multicast_delegate](pc::multicast_delegate<Ret(Args...)>) class it is possible to bind and execute multiple callables and 'collect' their results.
 ```cpp
 #include "multicast_delegate.hpp"
 #include <iostream>
