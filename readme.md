@@ -9,12 +9,13 @@
 - [How to build the documentation](#how-to-build-the-documentation)
 - [Contributing](#contributing)
 - [License](#license)
+- [Online Documentation](#online-documentation)
 # About
 Welcome to this repository. It contains a header only c++17 delegate implementation. A delegate is used to invoke free functions, member functions and function objects in a uniform manner. Two classes are provided:
 
- - @link pc::delegate<Ret(Args...)> pc::delegate @endlink , which can only bind to a single callable
- - and @link pc::multicast_delegate<Ret(Args...)> pc::multicast_delegate @endlink, which can bind multiple callables and collect their return values.
-
+ - [pc::delegate](include/delegate.hpp), which can only bind to a single callable
+ - and [pc::multicast_delegate](include/multicast_delegate.hpp), which can bind multiple callables and collect their return values.
+The docs are hosted [here](https://pelectron.github.io/delegate).
 If you find any bugs, unexpected behavior, failing tests, general feedback or improvements on the code, feel free to contact me at pelectron1602@gmail.com, make a pull request or start an issue. It would be awesome to get some feedback.
 
 # How to use
@@ -38,7 +39,7 @@ And some function object with the same calling signature:
    return 2*i; 
    };
 ```
-With the @link pc::delegate<Ret(Args...)> delegate @endlink class, it is possible to execute them in a uniform manner.
+With the **delegate** class, it is possible to execute them in a uniform manner.
 ```cpp
 #include "delegate.hpp"
 #include <iostream>
@@ -65,7 +66,7 @@ int main(){
   return 0;
 }
 ```
-With the @link pc::multicast_delegate<Ret(Args...)> multicast_delegate @endlink class it is possible to bind and execute multiple callables and 'collect' their results.
+With the **multicast_delegate** class it is possible to bind and execute multiple callables and 'collect' their results.
 ```cpp
 #include "multicast_delegate.hpp"
 #include <iostream>
@@ -169,3 +170,6 @@ I welcome every pull request gladly. Please just make sure to format your pull r
 
 # License
 This project is distributed under the Boost Software License version 1.0. See LICENSE_1_0.txt for more details.
+
+# Online Documentation
+Hosted [here](https://pelectron.github.io/delegate).
