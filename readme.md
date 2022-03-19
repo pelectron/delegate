@@ -1,5 +1,14 @@
-\mainpage
-\tableofcontents
+# Table of contents
+- [Table of contents](#table-of-contents)
+- [About](#about)
+- [How to use](#how-to-use)
+- [How to include in your own projects](#how-to-include-in-your-own-projects)
+- [How to include in meson projects](#how-to-include-in-meson-projects)
+- [How to build the examples and tests with meson](#how-to-build-the-examples-and-tests-with-meson)
+- [How to build the examples and tests without meson](#how-to-build-the-examples-and-tests-without-meson)
+- [How to build the documentation](#how-to-build-the-documentation)
+- [Contributing](#contributing)
+- [License](#license)
 # About
 Welcome to this repository. It contains a header only c++17 delegate implementation. A delegate is used to invoke free functions, member functions and function objects in a uniform manner. Two classes are provided:
 
@@ -118,7 +127,7 @@ Either create a meson wrap file, or clone the project into your subprojects dire
 # How to build the examples and tests with meson
 ``cd`` into the directory containing the ``meson.build`` file in your preferred terminal. Enter the following lines:``meson setup build``. If this was successful, compile with ``meson compile -C build``. Afterwards, the examples and the test executable should be in the ``build`` directory, if the setup and compile steps were successful. There should not be any build errors with the tests, as I have included a copy of <a href ="https://github.com/catchorg/Catch2.git">catch2</a> in this repository. The two example executables will be named ``delegate_example`` and ``multicast_delegate_example``. The test executables are called ``test_debug`` and ``test_release``.
 
-# How to build without meson
+# How to build the examples and tests without meson
 To use the library, no actual building is required. However, building and debugging the examples and tests to understand the underlying code can be helpful and fun, so I try to provide instructions for doing so with only the command line and a compiler. It may not perfectly work on your system and need some adjustment. I assume you have clang installed. If not, you will probably have to change the flag syntax.
 Firstly, change into the directory containing this readme file and setup your build directory.
 ```shell
