@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>delegate: delegate</title>
+<title>delegate: Table of contents</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,32 +62,32 @@ $(function() {
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">delegate </div></div>
+  <div class="headertitle"><div class="title">Table of contents </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md0">About</a></li>
-<li class="level1"><a href="#autotoc_md1">How to use</a></li>
-<li class="level1"><a href="#autotoc_md2">How to include in your own projects</a></li>
-<li class="level1"><a href="#autotoc_md3">How to include in meson projects</a></li>
-<li class="level1"><a href="#autotoc_md4">How to build the examples and tests with meson</a></li>
-<li class="level1"><a href="#autotoc_md5">How to build without meson</a></li>
-<li class="level1"><a href="#autotoc_md6">How to build the documentation</a></li>
-<li class="level1"><a href="#autotoc_md7">Contributing</a></li>
-<li class="level1"><a href="#autotoc_md8">License</a></li>
+<div class="textblock"><p ><a class="anchor" id="table-of-contents"></a></p><ul>
+<li><a class="el" href="index.html#table-of-contents">Table of contents</a></li>
+<li><a class="el" href="index.html#about">About</a></li>
+<li><a class="el" href="index.html#how-to-use">How to use</a></li>
+<li><a class="el" href="index.html#how-to-include-in-your-own-projects">How to include in your own projects</a></li>
+<li><a class="el" href="index.html#how-to-include-in-meson-projects">How to include in meson projects</a></li>
+<li><a class="el" href="index.html#how-to-build-the-examples-and-tests-with-meson">How to build the examples and tests with meson</a></li>
+<li><a class="el" href="index.html#how-to-build-the-examples-and-tests-without-meson">How to build the examples and tests without meson</a></li>
+<li><a class="el" href="index.html#how-to-build-the-documentation">How to build the documentation</a></li>
+<li><a class="el" href="index.html#contributing">Contributing</a></li>
+<li><a class="el" href="index.html#license">License</a></li>
+<li><a class="el" href="index.html#online-documentation">Online Documentation</a> </li>
 </ul>
-</div>
-<div class="textblock"><h1><a class="anchor" id="autotoc_md0"></a>
+<h1><a class="anchor" id="about"></a>
 About</h1>
 <p >Welcome to this repository. It contains a header only c++17 delegate implementation. A delegate is used to invoke free functions, member functions and function objects in a uniform manner. Two classes are provided:</p>
 <ul>
-<li><a class="el" href="classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.html">pc::delegate </a> , which can only bind to a single callable</li>
-<li>and <a class="el" href="classpc_1_1multicast__delegate_3_01_ret_07_args_8_8_8_08_4.html">pc::multicast_delegate </a>, which can bind multiple callables and collect their return values.</li>
+<li><a class="el" href="classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.html">pc::delegate</a>, which can only bind to a single callable</li>
+<li>and <a class="el" href="classpc_1_1multicast__delegate_3_01_ret_07_args_8_8_8_08_4.html">pc::multicast_delegate</a>, which can bind multiple callables and collect their return values. The docs are hosted <a href="https://pelectron.github.io/delegate">here</a>. If you find any bugs, unexpected behavior, failing tests, general feedback or improvements on the code, feel free to contact me at <a href="#" onclick="location.href='mai'+'lto:'+'pel'+'ec'+'tro'+'n1'+'602'+'@g'+'mai'+'l.'+'com'; return false;">pelec<span class="obfuscator">.nosp@m.</span>tron<span class="obfuscator">.nosp@m.</span>1602@<span class="obfuscator">.nosp@m.</span>gmai<span class="obfuscator">.nosp@m.</span>l.com</a>, make a pull request or start an issue. It would be awesome to get some feedback.</li>
 </ul>
-<p >If you find any bugs, unexpected behavior, failing tests, general feedback or improvements on the code, feel free to contact me at <a href="#" onclick="location.href='mai'+'lto:'+'pel'+'ec'+'tro'+'n1'+'602'+'@g'+'mai'+'l.'+'com'; return false;">pelec<span class="obfuscator">.nosp@m.</span>tron<span class="obfuscator">.nosp@m.</span>1602@<span class="obfuscator">.nosp@m.</span>gmai<span class="obfuscator">.nosp@m.</span>l.com</a>, make a pull request or start an issue. It would be awesome to get some feedback.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<h1><a class="anchor" id="how-to-use"></a>
 How to use</h1>
-<p >The examples directory contains fully documented examples of the delegate and multicast_delegate class. Here is a short version:</p>
+<p >The examples directory contains fully documented examples of the <a class="el" href="classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.html">pc::delegate</a> and <a class="el" href="classpc_1_1multicast__delegate_3_01_ret_07_args_8_8_8_08_4.html">pc::multicast_delegate</a> class. Here is a short version:</p>
 <p >Suppose we have a free function:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> calc(<span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> i; }</div>
 </div><!-- fragment --><p> And some class which has the same interface: </p><div class="fragment"><div class="line"><span class="keyword">class </span>MyClass{</div>
@@ -97,7 +97,7 @@ How to use</h1>
 <div class="line">  <span class="comment">// very important work with the big capture before returning</span></div>
 <div class="line">  <span class="keywordflow">return</span> 2*i; </div>
 <div class="line">  };</div>
-</div><!-- fragment --><p> With the <a class="el" href="classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.html">delegate </a> class, it is possible to execute them in a uniform manner. </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="delegate_8hpp.html">delegate.hpp</a>&quot;</span></div>
+</div><!-- fragment --><p> With the <a class="el" href="classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.html">pc::delegate</a> class, it is possible to execute them in a uniform manner. </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="delegate_8hpp.html">delegate.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;assert&gt;</span></div>
 <div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="delegate__example_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>(){</div>
@@ -123,7 +123,7 @@ How to use</h1>
 <div class="line">}</div>
 <div class="ttc" id="adelegate_8hpp_html"><div class="ttname"><a href="delegate_8hpp.html">delegate.hpp</a></div><div class="ttdoc">This file defines and implements the delegate class.</div></div>
 <div class="ttc" id="adelegate__example_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="delegate__example_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition:</b> <a href="delegate__example_8cpp_source.html#l00067">delegate_example.cpp:67</a></div></div>
-</div><!-- fragment --><p> With the <a class="el" href="classpc_1_1multicast__delegate_3_01_ret_07_args_8_8_8_08_4.html">multicast_delegate </a> class it is possible to bind and execute multiple callables and 'collect' their results. </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="multicast__delegate_8hpp.html">multicast_delegate.hpp</a>&quot;</span></div>
+</div><!-- fragment --><p> With the<a class="el" href="classpc_1_1multicast__delegate_3_01_ret_07_args_8_8_8_08_4.html">pc::multicast_delegate</a> class it is possible to bind and execute multiple callables and 'collect' their results. </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="multicast__delegate_8hpp.html">multicast_delegate.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;assert&gt;</span></div>
 <div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="delegate__example_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>(){</div>
@@ -170,21 +170,21 @@ How to use</h1>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="amulticast__delegate_8hpp_html"><div class="ttname"><a href="multicast__delegate_8hpp.html">multicast_delegate.hpp</a></div><div class="ttdoc">This file defines the multicast_delegate class.</div></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
+</div><!-- fragment --><h1><a class="anchor" id="how-to-include-in-your-own-projects"></a>
 How to include in your own projects</h1>
 <ol type="1">
 <li><a href="https://github.com/pelectron/delegate/archive/refs/heads/master.zip"><b>Download the zip</b></a> or <a href="https://github.com/pelectron/delegate.git"><b>clone</b></a> the git project.</li>
 <li>Add the 'include' directory to your compiler's or build system's include path.</li>
 <li>Add <code>#include "delegate.hpp"</code> or <code>#include "multicast_delegate.hpp"</code> to your sources.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="how-to-include-in-meson-projects"></a>
 How to include in meson projects</h1>
 <p >Either create a meson wrap file, or clone the project into your subprojects directory. Add the following line to your meson.build file: <code>delegate_dep = dependency('delegate', fallback:['delegate', 'delegate_dep'])</code>.Then use it in some executable/library/whatever you are trying to create, e.g. <code>my_exe = executable('my_exe', my_sources, dependencies:[delegate_dep,...], ...)</code></p>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="how-to-build-the-examples-and-tests-with-meson"></a>
 How to build the examples and tests with meson</h1>
 <p ><code>cd</code> into the directory containing the <code>meson.build</code> file in your preferred terminal. Enter the following lines:<code>meson setup build</code>. If this was successful, compile with <code>meson compile -C build</code>. Afterwards, the examples and the test executable should be in the <code>build</code> directory, if the setup and compile steps were successful. There should not be any build errors with the tests, as I have included a copy of <a href="https://github.com/catchorg/Catch2.git">catch2</a> in this repository. The two example executables will be named <code>delegate_example</code> and <code>multicast_delegate_example</code>. The test executables are called <code>test_debug</code> and <code>test_release</code>.</p>
-<h1><a class="anchor" id="autotoc_md5"></a>
-How to build without meson</h1>
+<h1><a class="anchor" id="how-to-build-the-examples-and-tests-without-meson"></a>
+How to build the examples and tests without meson</h1>
 <p >To use the library, no actual building is required. However, building and debugging the examples and tests to understand the underlying code can be helpful and fun, so I try to provide instructions for doing so with only the command line and a compiler. It may not perfectly work on your system and need some adjustment. I assume you have clang installed. If not, you will probably have to change the flag syntax. Firstly, change into the directory containing this readme file and setup your build directory. </p><div class="fragment"><div class="line">mkdir build</div>
 </div><!-- fragment --><p> Building the examples in debug mode: </p><div class="fragment"><div class="line">clang++ -std=c++17 -g examples/delegate_example.cpp -o build/delegate_example</div>
 <div class="line">clang++ -std=c++17 -g examples/multicast_delegate_example.cpp -o build/multicast_delegate_example</div>
@@ -194,19 +194,22 @@ How to build without meson</h1>
 </div><!-- fragment --><p> Again on windows with clang: </p><div class="fragment"><div class="line">clang++ -std=c++17 -g tests/delegate.t.cpp tests/multicast_delegate.t.cpp tests/r_value_ref_test.cpp tests/test_main.cpp -Iinclude -Isubprojects/Catch2-2.13.7/single_include -o build/test_debug.exe</div>
 </div><!-- fragment --><p> And also the release version for the test: </p><div class="fragment"><div class="line">clang++ -std=c++17 -O3 tests/delegate.t.cpp tests/multicast_delegate.t.cpp tests/r_value_ref_test.cpp tests/test_main.cpp -Iinclude -Isubprojects/Catch2-2.13.7/single_include -o build/test_release</div>
 </div><!-- fragment --><p> This should give you a executable called test_debug and test_release in the build directory. If you run them, all tests should pass.</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="how-to-build-the-documentation"></a>
 How to build the documentation</h1>
 <p >This project is documented with doxygen. By default, using the doxyfile contained in this repo will build the html version of the documentation in the docs/html subdirectory. Use the doxy wizard or doxygen from the command line with <code>doxygen Doxyfile</code> if doxygen is available in your path. The index.html should be now be in the docs/html directory. Alternatively, you can use meson to build it. To do this, you must</p><ol type="1">
 <li>run <code>meson configure build -Dbuild_docs=enabled</code> in the project root directory,</li>
 <li>then change into the build directory with <code>cd build</code></li>
 <li>and lastly actually build the docs with <code>ninja docs</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="contributing"></a>
 Contributing</h1>
 <p >I welcome every pull request gladly. Please just make sure to format your pull request with the .clang-format file of this project. If you add a new feature, please also write a test for it with catch2 and add the test sources to the tests subdirectory along with appropriate documentation.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="license"></a>
 License</h1>
-<p >This project is distributed under the Boost Software License version 1.0. See LICENSE_1_0.txt for more details. </p>
+<p >This project is distributed under the Boost Software License version 1.0. See LICENSE_1_0.txt for more details.</p>
+<h1><a class="anchor" id="online-documentation"></a>
+Online Documentation</h1>
+<p >Hosted <a href="https://pelectron.github.io/delegate">here</a>. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
