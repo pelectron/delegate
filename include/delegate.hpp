@@ -36,7 +36,12 @@ namespace pc {
    * and functors/ function objects, as long as they have a call signature of
    * Ret(Args...).
    *
-   * @details Some details to consider when invoking a delegate:
+   * @details The class will never heap allocate when binding a free
+   * function, object and member function, or a function object smaller than or
+   * equal to pc::impl::max_storage_size bytes. The total size of a
+   * delegate is 32 bytes. To increase the buffer size, change
+   * pc::impl::max_storage_size.
+   * Some details to consider when invoking a delegate:
    *  - if Ret anything but void or an rvalue reference, then a statically
    * allocated variable of type Ret is returned, if the delegate is invalid.
    * Because of static initialization, the value returned from a invalid
@@ -46,37 +51,39 @@ namespace pc {
    * your return type cannot safely handle being moved from twice, don't use
    * this implementation.
    *
-   * Theory of operation:
-   * The class consists of three main elements. A raw memory buffer of
-   * 16 bytes(called  \link pc::delegate<Ret(Args...)>::storage storage
-   * \endlink), a pointer to a free function with signature Ret(void*,Args...)
-   * (called \link pc::delegate<Ret(Args...)>::invoke invoke \endlink) and a
-   * pointer to a static vtable (called \link pc::delegate<Ret(Args...)>::table
-   * table \endlink).
+   * **Theory of operation**
+   * The class consists of three main elements.
+   *  1. a raw memory buffer of 16 bytes called [storage](@ref
+   * pc::delegate<Ret(Args...)>::storage)
+   *  2. a pointer to a free function with
+   * signature Ret(void*,Args...) called [invoke](@ref
+   * pc::delegate<Ret(Args...)>::invoke) and
+   *  3. a pointer to a static vtable called [table](@ref
+   * pc::delegate<Ret(Args...)>::table).
    *
    * The raw memory buffer is used to hold the callable data, a.k.a. either a
    * pointer a free function, a instance of mfn_holder_t/const_mfn_holder_t, a
    * instance of a passed in functor (sizeof(functor)<=16), or a pointer to a
    * heap allocated instance of a functor (sizeof(functor)>16)).
    *
-   * To call the delegate, the address of the raw memory 
-   * \link pc::delegate<Ret(Args...)>::storage storage \endlink is passed to the \a
-   * invoke member as a void*, along with the arguments. The function 
-   * \link pc::delegate<Ret(Args...)>::invoke invoke \endlink points to must know how
-   * to correctly cast the type back from the void* and execute the free
-   * function/member function/function object stored in the delegate. The
-   * private static member functions null_invoke(), mfn_invoke<T>(),
-   * const_mfn_invoke<T>(), inline_invoke<T>() and heap_invoke<T>() implement
-   * this behaviour.
+   * To call the delegate, the address of the raw memory
+   * [storage](@ref pc::delegate<Ret(Args...)>::storage) is passed to the
+   * [invoke](@ref pc::delegate<Ret(Args...)>::invoke) member as a void*, along
+   * with the arguments. The function [invoke](@ref
+   * pc::delegate<Ret(Args...)>::invoke) points to must know how to correctly
+   * cast the type back from the void* and execute the free function/member
+   * function/function object stored in the delegate. The private static member
+   * functions null_invoke(), mfn_invoke<T>(), const_mfn_invoke<T>(),
+   * inline_invoke<T>() and heap_invoke<T>() implement this behaviour.
    *
-   * The \link pc::delegate<Ret(Args...)>::table table \endlink member is not a
+   * The [table](@ref pc::delegate<Ret(Args...)>::table) member is not a
    * "real" compiler generated vtable, but a instance of a custom 'vtable' type.
    * The vtable type holds pointers the functions needed to copy, move and
-   * destroy a callable of a certain type correctly. The 
-   * \link pc::delegate<Ret(Args...)>::table table \endlink knows how to copy/move
-   * it's delegate's \link pc::delegate<Ret(Args...)>::storage storage \endlink
+   * destroy a callable of a certain type correctly. The
+   * [table](@ref pc::delegate<Ret(Args...)>::table) knows how to copy/move
+   * it's delegate's [storage](@ref pc::delegate<Ret(Args...)>::storage)
    * into another's, but not the reverse. This should become clear in the
-   * copy/move constructors/assignment operators.
+   * copy/move constructors/assignment operators of this class.
    *
    * @tparam Ret return type of callable
    * @tparam Args argument types of callable
