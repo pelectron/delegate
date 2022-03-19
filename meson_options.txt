@@ -1,2 +1,2 @@
-option('build_docs', type:'feature',value:'disabled', description:'meson will build the docs for this project.')
-option('doxy_dir_path', type : 'string', value : '', description : 'Path to doxygen bin directory, e.g. \'C:\Program Files\doxygen\bin\' or similar. Leave empty if you have doxygen available in your path')
+option('build_docs',  type : 'feature', value:'disabled', description: 'Documentation for this project will be built if set to enabled.')
+option('doxy_exe',    type : 'string',  value : '',       description : 'Full path to doxygen binary, e.g. \'C:/Program Files/doxygen/bin/doxygen.exe\' or similar. Leave empty if you have doxygen available in your path')
