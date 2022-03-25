@@ -1,14 +1,15 @@
 /**
- * @file multicast_delegate.hpp
- * @author Pele Constam (pelectron1602@gmail.com)
- * @brief This file defines the multicast_delegate class.
- * @version 0.1
- * @date 2022-03-18
+ * \file multicast_delegate.hpp
+ * \author Pele Constam (pelectron1602\gmail.com)
+ * \brief This file defines the \ref pc::multicast_delegate<Ret(Args...)>
+ * multicast_delegate class.
+ * \version 0.1
+ * \date 2022-03-18
  *
  * Copyright Pele Constam 2022.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
- * https://www.boost.org/LICENSE_1_0.txt) 
+ * https://www.boost.org/LICENSE_1_0.txt)
  */
 #ifndef PC_MULTICAST_DELEGATE_HPP
 #define PC_MULTICAST_DELEGATE_HPP
@@ -26,16 +27,16 @@ namespace pc {
   namespace impl {
 
     /// meta function for the results vector's value_type.
-    /// @tparam Ret multicast_delegate return type.
+    /// \tparam Ret multicast_delegate return type.
     template <typename Ret>
     struct ret_val {
       /// result of meta function
       using type = Ret;
     };
 
-    /// specialization for (possibly const) the case where Ret is a reference
+    /// specialization for (possibly const) case where Ret is a reference
     /// type.
-    /// @tparam Ret multicast_delegate return type.
+    /// \tparam Ret multicast_delegate return type.
     template <typename Ret>
     struct ret_val<Ret &> {
       /// result of meta function
@@ -43,7 +44,7 @@ namespace pc {
     };
 
     /// specialization for r value reference return type.
-    /// @tparam Ret multicast_delegate return type.
+    /// \tparam Ret multicast_delegate return type.
     template <typename Ret>
     struct ret_val<Ret &&> {
       /// result of meta function
@@ -55,9 +56,9 @@ namespace pc {
     using ret_val_t = typename ret_val<Ret>::type;
 
     /**
-     * @brief This class stores the values returned by the delegates
+     * This class stores the values returned by the delegates
      *
-     * @tparam Ret return type of the multicast_delegate.
+     * \tparam Ret return type of the multicast_delegate.
      */
     template <typename Ret>
     struct value_collector {
@@ -86,9 +87,10 @@ namespace pc {
   } // namespace impl
 
   /**
-   * @brief the multicast_delegate class can bind any amount of callables,
-   * execute them and collect the returned values.
-   * @details The class is essentially a wrapper around a std::vector of
+   * \brief \anchor multicast-delegate-brief the multicast_delegate class can bind any
+   * amount of callables, execute them and collect the returned values.
+   * 
+   * The class is essentially a wrapper around a std::vector of
    * delegate<Ret(Args...)> (called delegate vector from now on) and std::vector
    * of Ret (called results vector from now on), and provides a simple interface
    * for them. Using bind() with a callable appends a delegate to the delegate
@@ -104,20 +106,20 @@ namespace pc {
    *
    * To clear both vectors at once, use the total_reset() member function.
    *
-   * @note Depending on the return type of the delegate, the underlying way of
+   * \note Depending on the return type of the delegate, the underlying way of
    * storing the returned values can change quite a bit. Suppose T is the type
    * one gets when removing all reference qualifiers from the return
-   * type Ret. If Ret is a reference type, i.e. Ret = T& or Ret = const T&, then
+   * type Ret.
+   *  - If Ret is a reference type, i.e. Ret = T& or Ret = const T&, then
    * the results vector must store the return values in a
-   * std::reference_wrapper. If Ret is an rvalue reference, i.e. Ret = T&&, then
-   * the underlying storage is a std::vector<T>. The return values are simply
-   * moved into the vector. If Ret = void, then there is no results vector and
+   * std::reference_wrapper<T>.
+   *  - If Ret = void, then there is no results vector and
    * all calls to the result iteration functions will result in compilation
    * failure via static_assert.
    *
-   * @tparam Ret return type of the delegate
-   * @tparam Args argument types of the delegate
-   * @see multicast_delegate_example.cpp
+   * \tparam Ret return type of the delegate
+   * \tparam Args argument types of the delegate
+   * \see multicast_delegate_example.cpp
    */
   template <typename Ret, typename... Args>
   class multicast_delegate<Ret(Args...)> {
@@ -153,8 +155,8 @@ namespace pc {
     size_t num_callables() const;
 
     /**
-     * @brief get the number of results stored in the multicast_delegate
-     * @return size_t
+     * get the number of results stored in the multicast_delegate
+     * \return size_t
      */
     size_t num_results() const;
 
@@ -169,105 +171,105 @@ namespace pc {
     void total_reset();
 
     /**
-     * @brief bind a free function. This appends a new delegate to the delegate
+     * bind a free function. This appends a new delegate to the delegate
      * vector.
-     * @param free_function pointer to free function
+     * \param free_function pointer to free function
      */
     void bind(Ret (*free_function)(Args...));
 
     /**
-     * @brief bind an object and member function. This appends a new delegate to
+     * bind an object and member function. This appends a new delegate to
      * the delegate vector.
-     * @tparam T object type
-     * @param object object instance
-     * @param member_func pointer to member function to bind
+     * \tparam T object type
+     * \param object object instance
+     * \param member_func pointer to member function to bind
      */
     template <typename T>
     void bind(T &object, Ret (T::*member_func)(Args...));
 
     /**
-     * @brief bind an object and const member function. This appends a new
+     * bind an object and const member function. This appends a new
      * delegate to the delegate vector.
-     * @tparam T object type
-     * @param object object instance
-     * @param member_func pointer to const member function.
+     * \tparam T object type
+     * \param object object instance
+     * \param member_func pointer to const member function.
      */
     template <typename T>
     void bind(T &object, Ret (T::*member_func)(Args...) const);
 
     /**
-     * @brief bind a function object. This appends a new delegate to the
+     * bind a function object. This appends a new delegate to the
      * delegate vector.
-     * @tparam F function object type
-     * @param f function object instance
+     * \tparam F function object type
+     * \param f function object instance
      */
     template <typename F,
-              std::enable_if_t<!std::is_same_v<
-                  std::decay_t<F>, delegate_t>> * = nullptr>
+              std::enable_if_t<!std::is_same_v<std::decay_t<F>, delegate_t>> * =
+                  nullptr>
     void bind(F &&f);
 
     /**
-     * @brief bind a delegate. This appends d to the delegate vector.
-     * @param d delegate
+     * bind a delegate. This appends d to the delegate vector.
+     * \param d delegate
      */
     void bind(delegate_t &&d);
 
     /**
-     * @brief bind a delegate. This appends d to the delegate vector.
-     * @param d delegate
+     * bind a delegate. This appends d to the delegate vector.
+     * \param d delegate
      */
     void bind(const delegate_t &d);
 
     /// get iterator to the beginning of the delegate array.
-    multicast_delegate::delegate_iterator delegate_begin();
+    delegate_iterator delegate_begin();
     /// get iterator to the end of the delegate array.
-    multicast_delegate::delegate_iterator delegate_end();
+    delegate_iterator delegate_end();
     /// get const iterator to the beginning of the delegate array.
-    multicast_delegate::const_delegate_iterator delegate_begin() const;
+    const_delegate_iterator delegate_begin() const;
     /// get const iterator to the end of the delegate array.
-    multicast_delegate::const_delegate_iterator delegate_end() const;
+    const_delegate_iterator delegate_end() const;
 
     /**
-     * @brief get iterator to the beggining of the results array.
+     * get iterator to the beggining of the results array.
      *
-     * @return multicast_delegate<Ret(Args...)>::result_iterator
+     * \return multicast_delegate<Ret(Args...)>::result_iterator
      */
-    multicast_delegate::result_iterator begin();
+    result_iterator begin();
 
     /**
-     * @brief get iterator to the end of the results array.
+     * get iterator to the end of the results array.
      *
-     * @return multicast_delegate::result_iterator
+     * \return multicast_delegate::result_iterator
      */
-    multicast_delegate::result_iterator end();
+    result_iterator end();
 
     /**
-     * @brief get const iterator to the begin of the results array.
+     * get const iterator to the begin of the results array.
      *
-     * @return multicast_delegate::const_result_iterator
+     * \return multicast_delegate::const_result_iterator
      */
-    multicast_delegate::const_result_iterator begin() const;
+    const_result_iterator begin() const;
 
     /**
-     * @brief get const iterator to the end of the results array.
+     * get const iterator to the end of the results array.
      *
-     * @return multicast_delegate::const_result_iterator
+     * \return multicast_delegate::const_result_iterator
      */
-    multicast_delegate::const_result_iterator end() const;
+    const_result_iterator end() const;
 
     /**
-     * @brief get const iterator to the end of the results array.
+     * get const iterator to the end of the results array.
      *
-     * @return multicast_delegate::const_result_iterator
+     * \return multicast_delegate::const_result_iterator
      */
-    multicast_delegate::const_result_iterator cbegin() const;
+    const_result_iterator cbegin() const;
 
     /**
-     * @brief get const iterator to the end of the results array.
+     * get const iterator to the end of the results array.
      *
-     * @return multicast_delegate::const_result_iterator
+     * \return multicast_delegate::const_result_iterator
      */
-    multicast_delegate::const_result_iterator cend() const;
+    const_result_iterator cend() const;
 
   private:
     delegate_vector_t                 delegates;
