@@ -72,7 +72,7 @@ the multicast_delegate class can bind any amount of callables, execute them and 
   * **Args** argument types of the delegate 
 
 
-**See**: multicast_delegate_example.cpp 
+**See**: [multicast_delegate_example.cpp](multicast__delegate__example_8cpp.md#file-multicast-delegate-example.cpp)
 
 **Note**: Depending on the return type of the delegate, the underlying way of storing the returned values can change quite a bit. Suppose T is the type one gets when removing all reference qualifiers from the return type Ret.
 
@@ -466,4 +466,4 @@ get const iterator to the end of the results array.
 
 -------------------------------
 
-Updated on 2022-03-28 at 10:25:43 +0200
+Updated on 2022-03-28 at 10:54:23 +0200

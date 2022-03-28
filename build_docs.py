@@ -38,8 +38,9 @@ def build_doxygen_docs(
     # overriding the settings in temporary doxyfile
     with doxyfile_override.open("a") as file:
         file.write(f"OUTPUT_DIRECTORY = {rootdir}\n")
-        file.write(f"INPUT = {rootdir.joinpath('include')} {rootdir.joinpath('example')} {readme}\n")
-        file.write(f"EXAMPLE_PATH = {rootdir}/example\n")
+        file.write(f"INPUT = {rootdir.joinpath('include')} {rootdir.joinpath('examples')} {readme}\n")
+        file.write(f"EXAMPLE_PATH = {rootdir.joinpath('examples')}\n")
+        file.write(f"USE_MDFILE_AS_MAINPAGE = {readme}\n")
         if generate_xml:
             file.write(f"XML_OUTPUT = {xml_dir}\n")
         else:
@@ -48,11 +49,11 @@ def build_doxygen_docs(
             file.write(f"HTML_OUTPUT = {htmldir}\n")
             file.write(
                 "HTML_HEADER = "
-                f"{rootdir}/subprojects/doxygen-dark-theme/html_header.html\n"
+                f"{rootdir.joinpath('subprojects/doxygen-dark-theme/html_header.html')}\n"
             )
             file.write(
                 "HTML_FOOTER = "
-                f"{rootdir}/subprojects/doxygen-dark-theme/html_footer.html\n"
+                f"{rootdir.joinpath('subprojects/doxygen-dark-theme/html_footer.html')}\n"
             )
             file.write(
                 "HTML_EXTRA_STYLESHEET = "
@@ -61,7 +62,6 @@ def build_doxygen_docs(
             )
         else:
             file.write("GENERATE_HTML = NO\n")
-        file.write("USE_MDFILE_AS_MAINPAGE = {readme}")
     try:
         # run doxygen
         subprocess.run([str(doxygen), str(doxyfile_override)])
@@ -78,7 +78,7 @@ def generate_readme(readme_in: Path) -> Path:
         "\n[delegate]: #delegate-brief\n",
         "[multicast_delegate]: #multicast-delegate-brief\n",
     ]
-    out = Path(str(readme_in)  + '.temp' ) # unique name for readme
+    out = Path(f"{readme_in.parent}/{readme_in.stem}_temp{readme_in.suffix}") # unique name for readme
 
     with open(readme_in, "r") as input, open(out, "w") as output:
         for p in prefixes:
@@ -102,6 +102,7 @@ def markdown_docs(
     xml_dir: Path,
     doxygen_already_run: bool,
 ):
+    print("generating markdown docs\n")
     if not doxygen_already_run:
         build_doxygen_docs(
             doxygen=doxygen,
@@ -158,11 +159,9 @@ def build_both_docs(
     template_dir: Path,
     config_file: Path,
 ):
-
     readme = generate_readme(readme_in)
-
     xml_dir = rootdir.joinpath("tmp")
-
+    print('xml directory', xml_dir)
     build_doxygen_docs(
         doxygen=doxygen,
         rootdir=rootdir,
@@ -186,13 +185,12 @@ def build_both_docs(
         xml_dir=xml_dir,
         doxygen_already_run=True,
     )
-    os.remove(readme)
     shutil.rmtree(xml_dir, ignore_errors=True)
+    os.remove(readme)
 
 
 def generate_github_readme(readme: Path, rootdir: Path, markdown_dir: Path) -> Path:
     outfile = rootdir.joinpath("readme.md")
-    print(outfile)
     with open(readme, "r") as input, open(outfile, "w") as output:
         postfixes = [
             f"\n[delegate]: /{markdown_dir.stem}/classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.md",

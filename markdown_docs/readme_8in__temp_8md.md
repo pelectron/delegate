@@ -1,9 +1,9 @@
 ---
-title: readme.in.md.temp
+title: readme.in_temp.md
 
 ---
 
-# readme.in.md.temp
+# readme.in_temp.md
 
 
 
@@ -12,7 +12,7 @@ title: readme.in.md.temp
 
 ## Source code
 
-```cpp
+```markdown
 @mainpage
 @tableofcontents
 # About
@@ -229,4 +229,4 @@ Hosted [here](https://pelectron.github.io/delegate).
 
 -------------------------------
 
-Updated on 2022-03-28 at 10:45:41 +0200
+Updated on 2022-03-28 at 10:54:23 +0200

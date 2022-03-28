@@ -1,18 +1,3 @@
----
-title: readme.in.md.temp
-
----
-
-# readme.in.md.temp
-
-
-
-
-
-
-## Source code
-
-```cpp
 @mainpage
 @tableofcontents
 # About
@@ -224,9 +209,3 @@ Hosted [here](https://pelectron.github.io/delegate).
 
 [delegate]: #delegate-brief
 [multicast_delegate]: #multicast-delegate-brief
-```
-
-
--------------------------------
-
-Updated on 2022-03-28 at 10:45:41 +0200

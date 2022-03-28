@@ -46,9 +46,9 @@ if get_option('build_docs').enabled()
                                         '--root', source_dir,
                                         '--templates', source_dir / 'doxybook' / 'templates',
                                         '--config', source_dir / 'doxybook'/'config.json',
-                                        '-html', source_dir / 'docs',
+                                        '--htmldir', source_dir / 'docs',
                                         '--readme', source_dir / 'readme.in.md',
-                                        '--generate-github-readme'],
+                                        '--generate-github-readme', '--verbose'],
                                         depend_files: [all_library_sources],
                                         input:all_library_sources,
                                         output:'docs_target')

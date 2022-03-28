@@ -1,9 +1,9 @@
 ---
-title: readme.in.md.temp
+title: readme.md
 
 ---
 
-# readme.in.md.temp
+# readme.md
 
 
 
@@ -12,9 +12,7 @@ title: readme.in.md.temp
 
 ## Source code
 
-```cpp
-@mainpage
-@tableofcontents
+```markdown
 # About
 Welcome to this repository. It contains a header only c++17 delegate implementation. A delegate is used to invoke free functions, member functions and function objects in a uniform manner. Two classes are provided:
  - [delegate], which can only bind to a single callable
@@ -222,11 +220,12 @@ This project is distributed under the Boost Software License version 1.0. See LI
 Hosted [here](https://pelectron.github.io/delegate).
 
 
-[delegate]: #delegate-brief
-[multicast_delegate]: #multicast-delegate-brief
+[delegate]: /markdown_docs/classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.md
+[multicast_delegate]: /markdown_docs/classpc_1_1multicast__delegate_3_01_ret_07_args_8_8_8_08_4.md
+[max_storage_size]: /markdown_docs/classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.md#max_storage_size
 ```
 
 
 -------------------------------
 
-Updated on 2022-03-28 at 10:45:41 +0200
+Updated on 2022-03-28 at 10:37:39 +0200
