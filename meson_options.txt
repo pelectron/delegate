@@ -1,2 +1,4 @@
-option('build_docs',  type : 'feature', value:'disabled', description: 'Documentation for this project will be built if set to enabled.')
-option('doxy_exe',    type : 'string',  value : '',       description : 'Full path to doxygen binary, e.g. \'C:/Program Files/doxygen/bin/doxygen.exe\' or similar. Leave empty if you have doxygen available in your path')
+option('build_docs',    type : 'feature', value : 'disabled', description: 'Documentation for this project will be built if set to enabled.')
+option('doxygen_path',      type : 'string',  value : 'doxygen',  description : 'Full path to doxygen binary, e.g. \'C:/Program Files/doxygen/bin/doxygen.exe\' or similar. Leave empty if you have doxygen available in your path')
+option('doxybook_path',  type : 'string',  value : 'doxbook2', description : 'Full path to doxybook2 binary, e.g. \'C:/doxybook2/bin/doxybook2.exe\' or similar. Leave empty if you have doxybook2 available in your path')
+option('python_path',   type: 'string', value:'', description: 'full path to python binary')

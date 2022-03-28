@@ -204,7 +204,3 @@ This project is distributed under the Boost Software License version 1.0. See LI
 # Online Documentation
 Hosted [here](https://pelectron.github.io/delegate).
 
-
-[delegate]: /markdown_docs/classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.md
-[multicast_delegate]: /markdown_docs/classpc_1_1multicast__delegate_3_01_ret_07_args_8_8_8_08_4.md
-[max_storage_size]: /markdown_docs/classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.md#max_storage_size

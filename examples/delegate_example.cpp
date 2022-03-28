@@ -1,4 +1,5 @@
 /**
+ * @file delegate_example.cpp
  * @example delegate_example.cpp
  * @author Pele Constam (pelectron1602@gmail.com)
  * @brief This file contains a basic useage example of the delegate class.
@@ -10,6 +11,8 @@
  * (See accompanying file LICENSE_1_0.txt or copy at
  * https://www.boost.org/LICENSE_1_0.txt)
  */
+
+
 #include "../include/delegate.hpp"
 
 #include <iostream>
@@ -27,6 +30,7 @@ using namespace pc;
 // below are some example free functions, custom function objects and lambdas to
 // show how to use a delegate. In this example, all function like things to
 // invoke will have a parameter list of int,float and return type float.
+
 float free_func(int a, float b) { return a * b; }
 
 struct SmallFunctor {
@@ -64,6 +68,11 @@ auto lambda = [](int a, float f) -> float { return a + f; };
 
 auto lambda2 = lambda;
 
+/**
+ * @brief main delegate example
+ * 
+ * @return int 
+ */
 int main() {
   delegate<float(int, float)> my_delegate; // creating an empty delegate
   assert(my_delegate.is_valid() == false); // should be invalid

@@ -1,7 +1,6 @@
 /**
  * \file delegate.hpp
  * \author Pele Constam (pelectron1602\gmail.com)
- * \anchor delegate-page
  * \brief This file defines and implements the \ref pc::delegate<Ret(Args...)>
  * delegate class.
  * \version 0.1

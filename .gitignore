@@ -1,4 +1,10 @@
 subprojects/Catch2-2.13.7/**
 build/**
 .vscode/**
-docs/latex**
+docs/**
+xml/**
+node_modules/**
+mddocs/**
+docs/**
+generated/**
+__pycache__/**
