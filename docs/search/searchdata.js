@@ -6,8 +6,7 @@ var indexSectionsWithContent =
   3: "dmr",
   4: "bcdefhimnort~",
   5: "cdfimstv",
-  6: "cdirstv",
-  7: "t"
+  6: "cdirstv"
 };
 
 var indexSectionNames =
@@ -18,8 +17,7 @@ var indexSectionNames =
   3: "files",
   4: "functions",
   5: "variables",
-  6: "typedefs",
-  7: "pages"
+  6: "typedefs"
 };
 
 var indexSectionLabels =
@@ -30,7 +28,6 @@ var indexSectionLabels =
   3: "Files",
   4: "Functions",
   5: "Variables",
-  6: "Typedefs",
-  7: "Pages"
+  6: "Typedefs"
 };
 

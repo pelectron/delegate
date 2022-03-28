@@ -1,0 +1,2 @@
+DELEGATE_LINK=/markdown-docs/classpc_1_1delegate_3_01_ret_07_args_8_8_8_08_4.md
+MULTICAST_LINK=/markdown-docs/classpc_1_1multicast__delegate_3_01_ret_07_args_8_8_8_08_4.md
